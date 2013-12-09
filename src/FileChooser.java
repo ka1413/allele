@@ -71,7 +71,7 @@ public class FileChooser extends JPanel implements ActionListener {
 		frame.setVisible(true);
 	}
 
-	public static void main(String args[]) {
+	/*public static void main(String args[]) {
 		//Schedule a job for the event dispatch thread:
         //creating and showing this application's GUI.
         SwingUtilities.invokeLater(new Runnable() {
@@ -82,5 +82,5 @@ public class FileChooser extends JPanel implements ActionListener {
             }
         });
 
-	}
+	}*/
 }

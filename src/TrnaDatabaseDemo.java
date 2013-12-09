@@ -1,7 +1,7 @@
 
 import javax.swing.*;
 
-class MyDatabaseDemo {
+class TrnaDatabaseDemo {
     public static void main(String args[]) throws Exception {
 		TrnaDatabase db = new TrnaDatabase();
 		Species n, m;
