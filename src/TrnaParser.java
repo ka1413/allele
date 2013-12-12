@@ -1,73 +1,90 @@
+import java.io.IOException;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.Scanner;
 
 public class TrnaParser {
-	
-	public static void main(String args[]) throws IOException {
-		String inputFile;
-		TrnaParser parser = new TrnaParser();
+	private Path fFilePath;
+	private static Charset ENCODING = StandardCharsets.UTF_8;
+
+	private String name, acodon, isotype, sequence;
+	private Float fenergy;
+
+	private static Species spec;
+
+	public TrnaParser(String fileName) {
+		fFilePath = Paths.get(fileName);
 	}
+
+	public void processLineByLine() throws IOException {
+		spec = new Species();
+		spec.userInput();
+		try (Scanner scanner = new Scanner(fFilePath, ENCODING.name())) {
+			while (scanner.hasNextLine()) {
+				processLine1(scanner.nextLine());
+				processLine2(scanner.nextLine());
+				processLine3(scanner.nextLine());
+			}
+		}
+	}
+
+	protected void processLine1(String line) {
+		// use a second Scanner to parse the content of each line
+		Scanner scanner = new Scanner(line);
+		scanner.useDelimiter(" ");
+		if (scanner.hasNext()) {
+			// assumes the line has a certain structure
+			String temp = scanner.next();
+			temp = temp.substring(1);
+			this.name = temp;
+			scanner.next();
+			scanner.next();
+			this.isotype = scanner.next();
+			this.acodon = scanner.next();
+		} else {
+			System.out.println("Empty or invalid line. Unable to process.");
+		}
+	}
+
+	protected void processLine2(String line) {
+		// use a second Scanner to parse the content of each line
+		Scanner scanner = new Scanner(line);
+		scanner.useDelimiter(" ");
+		if (scanner.hasNext()) {
+			// assumes the line has a certain structure
+			this.sequence = scanner.next();
+		} else {
+			System.out.println("Empty or invalid line. Unable to process.");
+		}
+	}
+
+	protected void processLine3(String line) {
+		// use a second Scanner to parse the content of each line
+		Scanner scanner = new Scanner(line);
+		scanner.useDelimiter(" ");
+		if (scanner.hasNext()) {
+			// assumes the line has a certain structure
+			scanner.next();
+			String temp = scanner.next();
+			temp = temp.substring(1, temp.length() - 2);
+			this.fenergy = Float.parseFloat(temp);
+
+			Trna t = new Trna(this.name, this.acodon, this.isotype,
+					this.sequence, this.fenergy);
+			spec.addTrna(t);
+		} else {
+			System.out.println("Empty or invalid line. Unable to process.");
+		}
+	}
+
+	public static void main(String args[]) throws IOException {
+		String inputFile = "C:\\Temp\\test.txt";
+		TrnaParser parser = new TrnaParser(inputFile);
+		parser.processLineByLine();
+		
+		System.out.println(spec.showTrnaList());
+	}
+
 }
-
-public class ReadWithScanner {
-
-	  public static void main(String... aArgs) throws IOException {
-	    ReadWithScanner parser = new ReadWithScanner("C:\\Temp\\test.txt");
-	    parser.processLineByLine();
-	    log("Done.");
-	  }
-	  
-	  /**
-	   Constructor.
-	   @param aFileName full name of an existing, readable file.
-	  */
-	  public ReadWithScanner(String aFileName){
-	    fFilePath = Paths.get(aFileName);
-	  }
-	  
-	  
-	  /** Template method that calls {@link #processLine(String)}.  */
-	  public final void processLineByLine() throws IOException {
-	    try (Scanner scanner =  new Scanner(fFilePath, ENCODING.name())){
-	      while (scanner.hasNextLine()){
-	        processLine(scanner.nextLine());
-	      }      
-	    }
-	  }
-	  
-	  /** 
-	   Overridable method for processing lines in different ways.
-	    
-	   <P>This simple default implementation expects simple name-value pairs, separated by an 
-	   '=' sign. Examples of valid input: 
-	   <tt>height = 167cm</tt>
-	   <tt>mass =  65kg</tt>
-	   <tt>disposition =  "grumpy"</tt>
-	   <tt>this is the name = this is the value</tt>
-	  */
-	  protected void processLine(String aLine){
-	    //use a second Scanner to parse the content of each line 
-	    Scanner scanner = new Scanner(aLine);
-	    scanner.useDelimiter("=");
-	    if (scanner.hasNext()){
-	      //assumes the line has a certain structure
-	      String name = scanner.next();
-	      String value = scanner.next();
-	      log("Name is : " + quote(name.trim()) + ", and Value is : " + quote(value.trim()));
-	    }
-	    else {
-	      log("Empty or invalid line. Unable to process.");
-	    }
-	  }
-	  
-	  // PRIVATE 
-	  private final Path fFilePath;
-	  private final static Charset ENCODING = StandardCharsets.UTF_8;  
-	  
-	  private static void log(Object aObject){
-	    System.out.println(String.valueOf(aObject));
-	  }
-	  
-	  private String quote(String aText){
-	    String QUOTE = "'";
-	    return QUOTE + aText + QUOTE;
-	  }
-	} 
