@@ -19,6 +19,8 @@ public class MainDemo extends JFrame implements ActionListener {
 	private JSplitPane splitPane;
 	private JTable table1, table2;
 	private JScrollPane scrollPane1, scrollPane2;
+	
+	private static final long serialVersionUID = 1L;
 
 	public MainDemo() {
 		// Create the menu bar.

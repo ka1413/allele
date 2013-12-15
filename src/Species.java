@@ -3,17 +3,33 @@ import java.io.*;
 import java.util.ArrayList;
 
 public class Species implements Serializable {
-	public String name, nickname, kingdom, family, phylum;
+	public String name, nickname, kingdom, phylum, classs, order, family, genus;
 	private int numTrna;
 	public ArrayList<Trna> trnaList;
 	Species next;
 	
 	private static final long serialVersionUID = 1L;
 
-	// taxonomic heirarchy
-
 	Species() {
 
+	}
+	
+	Species(String name, String nickname, String kingdom, String phylum,
+			String classs, String order, String family, String genus,
+			ArrayList<Trna> trnaList, Species next) {
+		this.name = name;
+		this.nickname = nickname;
+		this.trnaList = trnaList;
+		this.numTrna = trnaList.size();
+
+		this.kingdom = kingdom;
+		this.phylum = phylum;
+		this.classs = classs;
+		this.order = order;
+		this.family = family;
+		this.genus = genus;
+
+		this.next = next;
 	}
 
 	// creates a duplicate node from n
@@ -22,9 +38,14 @@ public class Species implements Serializable {
 		this.nickname = s.nickname;
 		this.numTrna = s.numTrna;
 		this.trnaList = s.trnaList;
+		
 		this.kingdom = s.kingdom;
-		this.family = s.family;
 		this.phylum = s.phylum;
+		this.classs = s.classs;
+		this.order = s.order;
+		this.family = s.family;
+		this.genus = s.genus;
+		
 		this.next = s.next;
 	}
 
@@ -36,8 +57,8 @@ public class Species implements Serializable {
 		this.name = JOptionPane.showInputDialog("Enter Name");
 		this.nickname = JOptionPane.showInputDialog("Enter Nickname");
 		this.kingdom = JOptionPane.showInputDialog("Enter Kingdom");
-		this.family = JOptionPane.showInputDialog("Enter Family");
 		this.phylum = JOptionPane.showInputDialog("Enter Phylum");
+		this.genus = JOptionPane.showInputDialog("Enter Genus");
 		this.trnaList = new ArrayList<Trna>();
 		this.next = null;
 	}

@@ -25,6 +25,6 @@ public class Trna {
 	
 	public String toString(){
 		
-		return this.name + " " + this.acodon + " " + this.isotype + " " + this.fenergy.toString();
+		return this.name + " " + this.acodon + " " + this.isotype + " " + this.fenergy.toString() + " " + this.sequence;
 	}
 }
