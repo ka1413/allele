@@ -7,6 +7,8 @@ public class Species implements Serializable {
 	private int numTrna;
 	public ArrayList<Trna> trnaList;
 	Species next;
+	
+	private static final long serialVersionUID = 1L;
 
 	// taxonomic heirarchy
 
