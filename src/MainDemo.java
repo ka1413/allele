@@ -19,9 +19,13 @@ public class MainDemo extends JFrame implements ActionListener {
 	private JTable table1, table2;
 	private JScrollPane scrollPane1, scrollPane2;
 	
+	private static TrnaDatabase db = new TrnaDatabase();;
+	
 	private static final long serialVersionUID = 1L;
 
-	public MainDemo() {
+	public MainDemo() throws Exception {
+		db.loadFromFile("sample.dat");
+		
 		// Create the menu bar.
 		menuBar = new JMenuBar();
 
@@ -121,11 +125,17 @@ public class MainDemo extends JFrame implements ActionListener {
 	}
 
 	public void actionPerformed(ActionEvent x) {
-		System.out.println("Item clicked: " + x.getText());
+		System.out.println("Item clicked: " + x.getActionCommand());
 	}
 
-	public static void main(String args[]) {
-		MainDemo w = new MainDemo();
-		w.setVisible(true);
+	public static void main(String args[]) throws Exception{
+		MainDemo w;
+		try {
+			w = new MainDemo();
+			w.setVisible(true);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 }
