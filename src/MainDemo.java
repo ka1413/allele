@@ -10,7 +10,6 @@ import javax.swing.JMenuItem;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import javax.swing.JTable;
-import javax.swing.ScrollPaneConstants;
 
 public class MainDemo extends JFrame implements ActionListener {
 	private JMenuBar menuBar;
@@ -37,8 +36,9 @@ public class MainDemo extends JFrame implements ActionListener {
 		menuItem = new JMenuItem("Load database", KeyEvent.VK_L);
 		menu.getAccessibleContext().setAccessibleDescription(
 				"Load database other than the default");
+		menuItem.addActionListener(this);
 		menu.add(menuItem);
-
+		
 		menuItem = new JMenuItem("Save", KeyEvent.VK_S);
 		menu.add(menuItem);
 
@@ -121,7 +121,7 @@ public class MainDemo extends JFrame implements ActionListener {
 	}
 
 	public void actionPerformed(ActionEvent x) {
-
+		System.out.println("Item clicked: " + x.getText());
 	}
 
 	public static void main(String args[]) {
