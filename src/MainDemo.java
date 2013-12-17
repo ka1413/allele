@@ -7,22 +7,27 @@ import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
+import javax.swing.ButtonGroup;
 import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
+import javax.swing.JRadioButtonMenuItem;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import javax.swing.JTable;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
+import javax.swing.table.TableColumn;
 
 public class MainDemo extends JFrame implements ActionListener,
 		ListSelectionListener, MouseListener {
 	private JMenuBar menuBar;
 	private JMenu menu;
 	private JMenuItem menuItem;
+	ButtonGroup group;
+	JRadioButtonMenuItem allMode, acodonMode, aacidMode;
 	private JSplitPane splitPane;
 	private JTable table1, table2;
 	private JScrollPane scrollPane1, scrollPane2;
@@ -76,6 +81,24 @@ public class MainDemo extends JFrame implements ActionListener,
 
 		menuItem = new JMenuItem("Neural Network", KeyEvent.VK_N);
 		menu.add(menuItem);
+		
+		menu.addSeparator();
+		group = new ButtonGroup();
+		allMode = new JRadioButtonMenuItem("All tRNAs");
+		allMode.setActionCommand("allMode");
+		allMode.setSelected(true);
+		group.add(allMode);
+		menu.add(allMode);
+
+		acodonMode = new JRadioButtonMenuItem("According to Anti-codon");
+		acodonMode.setActionCommand("acodonMode");
+		group.add(acodonMode);
+		menu.add(acodonMode);
+		
+		aacidMode = new JRadioButtonMenuItem("According to Amino Acid");
+		aacidMode.setActionCommand("aacidMode");
+		group.add(aacidMode);
+		menu.add(aacidMode);
 
 		this.setJMenuBar(menuBar);
 
@@ -90,7 +113,7 @@ public class MainDemo extends JFrame implements ActionListener,
 			}
 		};
 
-		columnNames = new String[] { "Name", "Anti-codon", "Isotype",
+		columnNames = new String[] { "Name", "Anti-codon", "Amino Acid",
 				"Free Energy" };
 
 		data = db.getSelectedNode(44).toArray();
@@ -110,6 +133,32 @@ public class MainDemo extends JFrame implements ActionListener,
 		table1.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
 		table2.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
 
+		TableColumn column = null;
+		for (int i = 0; i < 9; i++) {
+		    column = table1.getColumnModel().getColumn(i);
+		    if (i == 0) {
+		        column.setPreferredWidth(200);
+		        column.setMinWidth(200);
+		    } else if(i < 8 && i > 0) {
+		        column.setPreferredWidth(100);
+		        column.setMinWidth(100);
+		    } else {
+		        column.setPreferredWidth(50);
+		        column.setMinWidth(50);
+		    }
+		}
+		
+		for (int i = 0; i < 4; i++) {
+		    column = table2.getColumnModel().getColumn(i);
+		    if (i == 0) {
+		        column.setPreferredWidth(300);
+		        column.setMinWidth(200);
+		    } else {
+		        column.setPreferredWidth(50);
+		        column.setMinWidth(50);
+		    }
+		}
+		
 		scrollPane1 = new JScrollPane(table1);
 		scrollPane2 = new JScrollPane(table2);
 
@@ -178,27 +227,63 @@ public class MainDemo extends JFrame implements ActionListener,
 
 			this.remove(panel);
 			panel.removeAll();
-			// jpan.remove(splitPane);
-			// splitPane.remove(scrollPane2);
-			String[] columnNames = { "Name", "Anti-codon", "Isotype",
-					"Free Energy" };
-			Object[][] data = db.getSelectedNode(row).toArray();
-			JTable table3 = new JTable(data, columnNames);
-			// scrollPane2.remove(table2);
+			
+			String[] columnNames = null;
+			Object[][] data = null;
+			
+			System.out.println(group.getSelection().getActionCommand());
+			
+			if (group.getSelection().getActionCommand().equals("allMode")) {
+				columnNames = new String[] { "Name", "Anti-codon", "Amino Acid",
+						"Free Energy" };
+				data = db.getSelectedNode(row).toArray();
+			} else if (group.getSelection().getActionCommand()
+					.equals("acodonMode")) {
+				columnNames = new String[] { "Anti-codon", "Mean (Free Energy)" };
+				db.getSelectedNode(row).updateTables();
+				data = db.getSelectedNode(row).acodonTableToArray();
+			} else if (group.getSelection().getActionCommand()
+					.equals("aacidMode")) {
+				columnNames = new String[] { "Amino Acid", "Mean (Free Energy)" };
+				db.getSelectedNode(row).updateTables();
+				data = db.getSelectedNode(row).aacidTableToArray();
+			}
+			
+//			columnNames = new String[] { "Name", "Anti-codon", "Amino Acid",
+//					"Free Energy" };
+//			data = db.getSelectedNode(row).toArray();
+			
+			table2 = new JTable(data, columnNames) {
+				public boolean getScrollableTracksViewportWidth() {
+					return getPreferredSize().width < getParent().getWidth();
+				}
+			};
+			
+			table2.addMouseListener(this);
+			table2.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+			
+//			TableColumn column = null;
+//			for (int i = 0; i < 4; i++) {
+//			    column = table2.getColumnModel().getColumn(i);
+//			    if (i == 0) {
+//			        column.setPreferredWidth(300);
+//			        column.setMinWidth(200);
+//			    } else {
+//			        column.setPreferredWidth(50);
+//			        column.setMinWidth(50);
+//			    }
+//			}
+			
 			panel = new JPanel();
-			// scrollPane2.remove(table2);
-			// scrollPane2.add(table3); ->wala to dapat new JScrollPane :)
-			/*
-			 * Instead na scrollPane2.add(table#) scrollPane2 = new
-			 * JScrollPane(table#) tapos re-declare mo yugn values nung talbe
-			 */
-			scrollPane2 = new JScrollPane(table3);
+			scrollPane2 = new JScrollPane(table2);
 			int divider = splitPane.getDividerLocation();
 			splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT,
 					scrollPane1, scrollPane2);
 			splitPane.setDividerLocation(divider);
+			
 			panel.add(splitPane);
 			this.add(panel);
+			
 			this.revalidate();
 			this.repaint();
 		}

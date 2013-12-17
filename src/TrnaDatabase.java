@@ -295,6 +295,24 @@ public class TrnaDatabase {
 		}
 	}
 	
+	public Species getByName(String s) {
+		if (s == null) {
+			return null;
+		} else {
+			rover = head;
+
+			while (rover.next != null) {
+				if (s == rover.name) {
+					break;
+				}
+
+				rover = rover.next;
+			}
+
+			return rover;
+		}
+	}
+	
 	public Object[][] toArray(){
 		Object[][] data = new Object[this.length()][9];
 		Species s;

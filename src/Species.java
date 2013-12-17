@@ -5,9 +5,22 @@ import java.util.ArrayList;
 public class Species implements Serializable {
 	public String name, nickname, kingdom, phylum, classs, order, family, genus;
 	public int numTrna;
+	public Float[] acodonTableFE = new Float[64], aacidTableFE = new Float[23];
 	public ArrayList<Trna> trnaList;
-	Species next;
-	
+	public Species next;
+	public static String[] acodonTable = new String[] { "AAA", "AAC", "AAG",
+			"AAT", "ACA", "ACC", "ACG", "ACT", "AGA", "AGC", "AGG", "AGT",
+			"ATA", "ATC", "ATG", "ATT", "CAA", "CAC", "CAG", "CAT", "CCA",
+			"CCC", "CCG", "CCT", "CGA", "CGC", "CGG", "CGT", "CTA", "CTC",
+			"CTG", "CTT", "GAA", "GAC", "GAG", "GAT", "GCA", "GCC", "GCG",
+			"GCT", "GGA", "GGC", "GGG", "GGT", "GTA", "GTC", "GTG", "GTT",
+			"TAA", "TAC", "TAG", "TAT", "TCA", "TCC", "TCG", "TCT", "TGA",
+			"TGC", "TGG", "TGT", "TTA", "TTC", "TTG", "TTT" };
+	public static String[] aacidTable = new String[] { "Ala", "Cys", "Asp",
+			"Glu", "Phe", "Gly", "His", "Ile", "Lys", "Leu", "Met", "Asn",
+			"Pyl", "Pro", "Gln", "Arg", "Ser", "Thr", "Sec", "Val", "Trp",
+			"Tyr", "SeC(e)" };
+
 	private static final long serialVersionUID = 1L;
 
 	Species() {
@@ -95,5 +108,78 @@ public class Species implements Serializable {
 
 	public String toString() {
 		return this.name + " (" + this.nickname + ")";
+	}
+	
+	public void updateTables(){
+		ArrayList<Trna> trnaList = new ArrayList<Trna>(this.trnaList), temp = new ArrayList<Trna>();
+		Float avg;
+		
+		for(int i=0; i<acodonTable.length; i++){
+			for(int j=0; j<trnaList.size(); j++){
+				
+				if(acodonTable[i].equals(trnaList.get(j).acodon)){
+					temp.add(trnaList.get(j));
+				}
+			}
+			avg = 0f;
+			if(temp.size() > 0){
+				
+				for(int k=0; k<temp.size(); k++){
+					avg = avg + temp.get(k).fenergy;
+				}
+				
+				avg = avg / temp.size();
+				this.acodonTableFE[i] = avg;
+			} else {
+				this.acodonTableFE[i] = null;
+			}
+			
+			temp.clear();
+		}
+		
+		for(int i=0; i<aacidTable.length; i++){
+			for(int j=0; j<trnaList.size(); j++){
+				
+				if(aacidTable[i].equals(trnaList.get(j).isotype)){
+					temp.add(trnaList.get(j));
+				}
+			}
+			avg = 0f;
+			if(temp.size() > 0){
+				
+				for(int k=0; k<temp.size(); k++){
+					avg = avg + temp.get(k).fenergy;
+				}
+				
+				avg = avg / temp.size();
+				this.aacidTableFE[i] = avg;
+			} else {
+				this.aacidTableFE[i] = null;
+			}
+			
+			temp.clear();
+		}
+	}
+	
+	public Object[][] acodonTableToArray() {
+		Object[][] data = new Object[acodonTable.length][2];
+		
+		for(int i=0; i<acodonTable.length; i++){
+			data[i][0] = acodonTable[i];
+			data[i][1] = this.acodonTableFE[i];
+		}
+		
+		return data;
+	}
+	
+	public Object[][] aacidTableToArray() {
+		Object[][] data = new Object[aacidTable.length][2];
+		
+		for(int i=0; i<aacidTable.length; i++){
+			data[i][0] = aacidTable[i];
+			data[i][1] = this.aacidTableFE[i];
+		}
+		
+		return data;
 	}
 }

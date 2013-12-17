@@ -4,6 +4,7 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.ListIterator;
 import java.util.Scanner;
 
 public class Parser {
@@ -15,6 +16,39 @@ public class Parser {
 
 	public Parser(String fileName) {
 		fFilePath = Paths.get(fileName);
+	}
+	
+	public TrnaDatabase parseTrnaSorted() throws Exception {
+		TrnaDatabase db = new TrnaDatabase();
+		db.loadFromFile("sample.dat");
+		ArrayList<Trna> trnaList = new ArrayList<Trna>(this.parseTrna());
+		
+		Species s;
+		ListIterator<Trna> lit;
+		Trna t;
+		String string1, string2;
+		
+		s = db.listIterator();
+		while (s != null) {
+			lit = trnaList.listIterator();
+			while (lit.hasNext()) {
+				t = lit.next();
+				string1 = s.name.replace(" ", "_");
+				string1 = string1.toUpperCase();
+				string2 = t.name.toUpperCase();
+				//System.out.println(string1 + "===" + string2);
+				if(string2.contains(string1)){
+					s.trnaList.add(t);
+					lit.remove();
+				}
+			}
+			//System.out.println(s.toString());
+			s = db.listIterator();
+		}
+		
+		System.out.println(trnaList.size());
+		db.saveToFile("sample.dat");
+		return null;
 	}
 	
 	public TrnaDatabase parseSpecies() throws IOException {
@@ -72,7 +106,7 @@ public class Parser {
 
 	public ArrayList<Trna> processByThrees() throws IOException {
 		ArrayList<Trna> trnaList = new ArrayList<Trna>();
-
+		int i = 0;
 		try (Scanner scanner = new Scanner(fFilePath, ENCODING.name())) {
 			while (scanner.hasNextLine()) {
 				processLine1(scanner.nextLine());
@@ -81,6 +115,8 @@ public class Parser {
 				if (temp != null) {
 					trnaList.add(temp);
 				}
+				i++;
+				System.out.println(i);
 			}
 		}
 
@@ -140,24 +176,25 @@ public class Parser {
 	}
 
 	public static void main(String args[]) throws Exception {
-		String inputFile = "C:\\Temp\\Brachypodium_distachyon.fa";
-		//Parser parser = new Parser(inputFile);
-		Species spec = new Species();
-		
-		TrnaDatabase db = new TrnaDatabase();
-		
-		db.loadFromFile("sample.dat");
-		
-		spec = db.getSelectedNode(2);
-		
-		System.out.println(spec.toString());
-		
-		//ArrayList<Trna> trnaList = new ArrayList<Trna>(parser.parseTrna());
-
-		//spec.trnaList.addAll(trnaList);
-		System.out.println(spec.showTrnaList());
-		
-		//db.saveToFile("sample.dat");
+		String inputFile = "C:\\Temp\\results_eukaryotic.txt";
+		Parser parser = new Parser(inputFile);
+		parser.parseTrnaSorted();
+//		Species spec = new Species();
+//		
+//		TrnaDatabase db = new TrnaDatabase();
+//		
+//		db.loadFromFile("sample.dat");
+//		
+//		spec = db.getSelectedNode(2);
+//		
+//		System.out.println(spec.toString());
+//		
+//		ArrayList<Trna> trnaList = new ArrayList<Trna>(parser.parseTrna());
+//
+//		spec.trnaList = new ArrayList<Trna>(trnaList);
+//		System.out.println(spec.showTrnaList());
+//		
+//		//db.saveToFile("sample.dat");
 		
 //		TrnaDatabase db = parser.parseSpecies();
 //		Species n = db.listIterator();
