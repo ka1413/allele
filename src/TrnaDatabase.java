@@ -294,4 +294,24 @@ public class TrnaDatabase {
 			return rover;
 		}
 	}
+	
+	public Object[][] toArray(){
+		Object[][] data = new Object[this.length()][9];
+		Species s;
+		for(int i=0; i<this.length(); i++){
+			s = this.listIterator();
+			
+			data[i][0] = s.name;
+			data[i][1] = s.nickname;
+			data[i][2] = s.kingdom;
+			data[i][3] = s.phylum;
+			data[i][4] = s.classs;
+			data[i][5] = s.order;
+			data[i][6] = s.family;
+			data[i][7] = s.genus;
+			data[i][8] = s.numTrna();
+		}
+		
+		return data;
+	}
 }

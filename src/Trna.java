@@ -1,7 +1,11 @@
+import java.io.Serializable;
 
-public class Trna {
+
+public class Trna implements Serializable {
 	public String name, acodon, isotype, sequence;
 	public Float fenergy;
+	
+	private static final long serialVersionUID = 1L;
 	
 	public Trna(){
 		

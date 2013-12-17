@@ -51,7 +51,7 @@ public class Parser {
 			family = scanner.next();
 			genus = scanner.next();
 			ArrayList<Trna> trnaList =  new ArrayList<Trna>();
-//			System.out.println(name + nickname + kingdom + phylum + classs + order + family + genus);
+//			System.out.println(name + nickname + kingdom + "_" + phylum + "_" + classs + "_" + order + "_" + family + "_" + genus);
 			s = new Species(name, nickname, kingdom, phylum, classs, order, family, genus, trnaList, null);
 			return s;
 		} else {
@@ -139,23 +139,34 @@ public class Parser {
 		}
 	}
 
-	public static void main(String args[]) throws IOException {
-		String inputFile = "C:\\Temp\\test2.csv";
-		Parser parser = new Parser(inputFile);
+	public static void main(String args[]) throws Exception {
+		String inputFile = "C:\\Temp\\Brachypodium_distachyon.fa";
+		//Parser parser = new Parser(inputFile);
+		Species spec = new Species();
 		
+		TrnaDatabase db = new TrnaDatabase();
 		
-//		ArrayList<Trna> trnaList = new ArrayList<Trna>(parser.parseTrna());
-//
-//		Species spec = new Species("test", "test", "test", "test", "test",
-//				"test", "test", "test", trnaList, null);
-//		System.out.println(spec.showTrnaList());
+		db.loadFromFile("sample.dat");
 		
-		TrnaDatabase db = parser.parseSpecies();
-		Species n = db.listIterator();
-		while(n != null){
-			System.out.println(n.toString());
-			n = db.listIterator();
-		}
+		spec = db.getSelectedNode(2);
+		
+		System.out.println(spec.toString());
+		
+		//ArrayList<Trna> trnaList = new ArrayList<Trna>(parser.parseTrna());
+
+		//spec.trnaList.addAll(trnaList);
+		System.out.println(spec.showTrnaList());
+		
+		//db.saveToFile("sample.dat");
+		
+//		TrnaDatabase db = parser.parseSpecies();
+//		Species n = db.listIterator();
+//		while(n != null){
+//			System.out.println(n.toString());
+//			n = db.listIterator();
+//		}
+//		
+//		db.saveToFile("sample.dat");
 	}
 
 }

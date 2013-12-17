@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 public class Species implements Serializable {
 	public String name, nickname, kingdom, phylum, classs, order, family, genus;
-	private int numTrna;
+	public int numTrna;
 	public ArrayList<Trna> trnaList;
 	Species next;
 	
@@ -49,8 +49,8 @@ public class Species implements Serializable {
 		this.next = s.next;
 	}
 
-	public int numberOfTrnas() {
-		return numTrna;
+	public int numTrna() {
+		return trnaList.size();
 	}
 
 	public void userInput() {
@@ -58,6 +58,9 @@ public class Species implements Serializable {
 		this.nickname = JOptionPane.showInputDialog("Enter Nickname");
 		this.kingdom = JOptionPane.showInputDialog("Enter Kingdom");
 		this.phylum = JOptionPane.showInputDialog("Enter Phylum");
+		this.classs = JOptionPane.showInputDialog("Enter Class");
+		this.order = JOptionPane.showInputDialog("Enter Order");
+		this.family = JOptionPane.showInputDialog("Enter Family");
 		this.genus = JOptionPane.showInputDialog("Enter Genus");
 		this.trnaList = new ArrayList<Trna>();
 		this.next = null;
@@ -75,6 +78,19 @@ public class Species implements Serializable {
 		}
 
 		return temp;
+	}
+	
+	public Object[][] toArray() {
+		Object[][] data = new Object[this.trnaList.size()][4];
+		
+		for(int i=0; i<this.trnaList.size(); i++){
+			data[i][0] = this.trnaList.get(i).name;
+			data[i][1] = this.trnaList.get(i).acodon;
+			data[i][2] = this.trnaList.get(i).isotype;
+			data[i][3] = this.trnaList.get(i).fenergy;
+		}
+		
+		return data;
 	}
 
 	public String toString() {
