@@ -17,9 +17,13 @@ import javax.swing.JRadioButtonMenuItem;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import javax.swing.JTable;
+import javax.swing.RowSorter;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
+import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumn;
+import javax.swing.table.TableModel;
+import javax.swing.table.TableRowSorter;
 
 public class MainDemo extends JFrame implements ActionListener,
 		ListSelectionListener, MouseListener {
@@ -81,7 +85,7 @@ public class MainDemo extends JFrame implements ActionListener,
 
 		menuItem = new JMenuItem("Neural Network", KeyEvent.VK_N);
 		menu.add(menuItem);
-		
+
 		menu.addSeparator();
 		group = new ButtonGroup();
 		allMode = new JRadioButtonMenuItem("All tRNAs");
@@ -94,7 +98,7 @@ public class MainDemo extends JFrame implements ActionListener,
 		acodonMode.setActionCommand("acodonMode");
 		group.add(acodonMode);
 		menu.add(acodonMode);
-		
+
 		aacidMode = new JRadioButtonMenuItem("According to Amino Acid");
 		aacidMode.setActionCommand("aacidMode");
 		group.add(aacidMode);
@@ -107,23 +111,53 @@ public class MainDemo extends JFrame implements ActionListener,
 
 		Object[][] data = db.toArray();
 
-		table1 = new JTable(data, columnNames) {
+		TableModel model = new DefaultTableModel(data, columnNames) {
+			public Class getColumnClass(int column) {
+				Class returnValue;
+				if ((column >= 0) && (column < getColumnCount())) {
+					returnValue = getValueAt(0, column).getClass();
+				} else {
+					returnValue = Object.class;
+				}
+				return returnValue;
+			}
+		};
+
+		table1 = new JTable(model) {
 			public boolean getScrollableTracksViewportWidth() {
 				return getPreferredSize().width < getParent().getWidth();
 			}
 		};
+		
+		RowSorter<TableModel> sorter = new TableRowSorter<TableModel>(model);
+		table1.setRowSorter(sorter);
 
 		columnNames = new String[] { "Name", "Anti-codon", "Amino Acid",
 				"Free Energy" };
 
 		data = db.getSelectedNode(44).toArray();
 
-		table2 = new JTable(data, columnNames) {
+		model = new DefaultTableModel(data, columnNames) {
+			public Class getColumnClass(int column) {
+				Class returnValue;
+				if ((column >= 0) && (column < getColumnCount())) {
+					returnValue = getValueAt(0, column).getClass();
+				} else {
+					returnValue = Object.class;
+				}
+				return returnValue;
+			}
+		};
+		
+		table2 = new JTable(model) {
 			public boolean getScrollableTracksViewportWidth() {
 				return getPreferredSize().width < getParent().getWidth();
 			}
 		};
-
+		
+		sorter = new TableRowSorter<TableModel>(model);
+		table2.setRowSorter(sorter);
+		
 		// table1.getSelectionModel().addListSelectionListener(this);
 		// table2.getSelectionModel().addListSelectionListener(this);
 
@@ -135,30 +169,30 @@ public class MainDemo extends JFrame implements ActionListener,
 
 		TableColumn column = null;
 		for (int i = 0; i < 9; i++) {
-		    column = table1.getColumnModel().getColumn(i);
-		    if (i == 0) {
-		        column.setPreferredWidth(200);
-		        column.setMinWidth(200);
-		    } else if(i < 8 && i > 0) {
-		        column.setPreferredWidth(100);
-		        column.setMinWidth(100);
-		    } else {
-		        column.setPreferredWidth(50);
-		        column.setMinWidth(50);
-		    }
+			column = table1.getColumnModel().getColumn(i);
+			if (i == 0) {
+				column.setPreferredWidth(200);
+				column.setMinWidth(200);
+			} else if (i < 8 && i > 0) {
+				column.setPreferredWidth(100);
+				column.setMinWidth(100);
+			} else {
+				column.setPreferredWidth(50);
+				column.setMinWidth(50);
+			}
 		}
-		
+
 		for (int i = 0; i < 4; i++) {
-		    column = table2.getColumnModel().getColumn(i);
-		    if (i == 0) {
-		        column.setPreferredWidth(300);
-		        column.setMinWidth(200);
-		    } else {
-		        column.setPreferredWidth(50);
-		        column.setMinWidth(50);
-		    }
+			column = table2.getColumnModel().getColumn(i);
+			if (i == 0) {
+				column.setPreferredWidth(300);
+				column.setMinWidth(200);
+			} else {
+				column.setPreferredWidth(50);
+				column.setMinWidth(50);
+			}
 		}
-		
+
 		scrollPane1 = new JScrollPane(table1);
 		scrollPane2 = new JScrollPane(table2);
 
@@ -207,7 +241,6 @@ public class MainDemo extends JFrame implements ActionListener,
 	@Override
 	public void mouseClicked(MouseEvent me) {
 		JTable table = (JTable) me.getSource();
-
 		// Point p = me.getPoint();
 		// int row = table.rowAtPoint(p);
 
@@ -220,38 +253,51 @@ public class MainDemo extends JFrame implements ActionListener,
 
 			Point p = me.getPoint();
 			int row = table.rowAtPoint(p);
-			System.out.println(row);
+			String key = (String) table.getValueAt(row, 0);
+			System.out.println(table.getValueAt(row, 0));
 			// if (table2.getSelectedRow() > -1){
 			// table2.clearSelection();
 			// }
 
 			this.remove(panel);
 			panel.removeAll();
-			
+
 			String[] columnNames = null;
 			Object[][] data = null;
-			
+
 			System.out.println(group.getSelection().getActionCommand());
-			
+
 			if (group.getSelection().getActionCommand().equals("allMode")) {
-				columnNames = new String[] { "Name", "Anti-codon", "Amino Acid",
-						"Free Energy" };
-				data = db.getSelectedNode(row).toArray();
+				columnNames = new String[] { "Name", "Anti-codon",
+						"Amino Acid", "Free Energy" };
+				data = db.getByName(key).toArray();
 			} else if (group.getSelection().getActionCommand()
 					.equals("acodonMode")) {
 				columnNames = new String[] { "Anti-codon", "Mean (Free Energy)" };
-				db.getSelectedNode(row).updateTables();
-				data = db.getSelectedNode(row).acodonTableToArray();
+				db.getByName(key).updateTables();
+				data = db.getByName(key).acodonTableToArray();
 			} else if (group.getSelection().getActionCommand()
 					.equals("aacidMode")) {
 				columnNames = new String[] { "Amino Acid", "Mean (Free Energy)" };
-				db.getSelectedNode(row).updateTables();
-				data = db.getSelectedNode(row).aacidTableToArray();
+				db.getByName(key).updateTables();
+				data = db.getByName(key).aacidTableToArray();
 			}
-			
-//			columnNames = new String[] { "Name", "Anti-codon", "Amino Acid",
-//					"Free Energy" };
-//			data = db.getSelectedNode(row).toArray();
+
+			// columnNames = new String[] { "Name", "Anti-codon", "Amino Acid",
+			// "Free Energy" };
+			// data = db.getSelectedNode(row).toArray();
+
+//			TableModel model = new DefaultTableModel(data, columnNames) {
+//				public Class getColumnClass(int column) {
+//					Class returnValue;
+//					if ((column >= 0) && (column < getColumnCount())) {
+//						returnValue = getValueAt(0, column).getClass();
+//					} else {
+//						returnValue = Object.class;
+//					}
+//					return returnValue;
+//				}
+//			};
 			
 			table2 = new JTable(data, columnNames) {
 				public boolean getScrollableTracksViewportWidth() {
@@ -259,31 +305,33 @@ public class MainDemo extends JFrame implements ActionListener,
 				}
 			};
 			
+//			RowSorter<TableModel> sorter = new TableRowSorter<TableModel>(model);
+//			table2.setRowSorter(sorter);
 			table2.addMouseListener(this);
 			table2.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
-			
-//			TableColumn column = null;
-//			for (int i = 0; i < 4; i++) {
-//			    column = table2.getColumnModel().getColumn(i);
-//			    if (i == 0) {
-//			        column.setPreferredWidth(300);
-//			        column.setMinWidth(200);
-//			    } else {
-//			        column.setPreferredWidth(50);
-//			        column.setMinWidth(50);
-//			    }
-//			}
-			
+
+			// TableColumn column = null;
+			// for (int i = 0; i < 4; i++) {
+			// column = table2.getColumnModel().getColumn(i);
+			// if (i == 0) {
+			// column.setPreferredWidth(300);
+			// column.setMinWidth(200);
+			// } else {
+			// column.setPreferredWidth(50);
+			// column.setMinWidth(50);
+			// }
+			// }
+
 			panel = new JPanel();
 			scrollPane2 = new JScrollPane(table2);
 			int divider = splitPane.getDividerLocation();
 			splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT,
 					scrollPane1, scrollPane2);
 			splitPane.setDividerLocation(divider);
-			
+
 			panel.add(splitPane);
 			this.add(panel);
-			
+
 			this.revalidate();
 			this.repaint();
 		}
@@ -316,7 +364,7 @@ public class MainDemo extends JFrame implements ActionListener,
 		// TODO Auto-generated method stub
 
 	}
-	
+
 	public static void main(String args[]) throws Exception {
 		MainDemo w;
 		try {
