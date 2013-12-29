@@ -6,6 +6,7 @@ public class Species implements Serializable {
 	public String name, nickname, kingdom, phylum, classs, order, family, genus;
 	public int numTrna;
 	public Float[] acodonTableFE = new Float[64], aacidTableFE = new Float[23];
+	public int[] remarks1 = new int[64], remarks2 = new int[23];
 	public ArrayList<Trna> trnaList;
 	public Species next;
 	public static String[] acodonTable = new String[] { "AAA", "AAC", "AAG",
@@ -129,6 +130,7 @@ public class Species implements Serializable {
 				}
 				
 				avg = avg / temp.size();
+				//this.remarks1[i] = temp.size();
 				this.acodonTableFE[i] = avg;
 			} else {
 				this.acodonTableFE[i] = null;
@@ -152,6 +154,7 @@ public class Species implements Serializable {
 				}
 				
 				avg = avg / temp.size();
+				//this.remarks2[i] = temp.size();
 				this.aacidTableFE[i] = avg;
 			} else {
 				this.aacidTableFE[i] = null;
@@ -162,24 +165,29 @@ public class Species implements Serializable {
 	}
 	
 	public Object[][] acodonTableToArray() {
-		Object[][] data = new Object[acodonTable.length][2];
+		Object[][] data = new Object[acodonTable.length][3];
 		
 		for(int i=0; i<acodonTable.length; i++){
 			data[i][0] = acodonTable[i];
 			data[i][1] = this.acodonTableFE[i];
+			//data[i][2] = this.remarks1[i];
 		}
 		
 		return data;
 	}
 	
 	public Object[][] aacidTableToArray() {
-		Object[][] data = new Object[aacidTable.length][2];
+		Object[][] data = new Object[aacidTable.length][3];
 		
 		for(int i=0; i<aacidTable.length; i++){
 			data[i][0] = aacidTable[i];
 			data[i][1] = this.aacidTableFE[i];
+			//data[i][2] = this.remarks2[i];
 		}
 		
 		return data;
+	}
+	public void initRemarks(){
+		this.remarks1 = new int[64]; this.remarks2 = new int[23];
 	}
 }

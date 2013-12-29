@@ -8,6 +8,7 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
 import javax.swing.ButtonGroup;
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
@@ -66,11 +67,13 @@ public class MainDemo extends JFrame implements ActionListener,
 		menuItem = new JMenuItem("Save As...", KeyEvent.VK_A);
 		menu.getAccessibleContext().setAccessibleDescription(
 				"Save in a different filename");
+		menuItem.addActionListener(this);
 		menu.add(menuItem);
 
 		menu.addSeparator();
 
 		menuItem = new JMenuItem("Exit", KeyEvent.VK_X);
+		menuItem.addActionListener(this);
 		menu.add(menuItem);
 
 		// Build second menu in the menu bar.
@@ -81,6 +84,10 @@ public class MainDemo extends JFrame implements ActionListener,
 		menuBar.add(menu);
 
 		menuItem = new JMenuItem("Phylogegnetic Tree", KeyEvent.VK_T);
+		menu.add(menuItem);
+		
+		menuItem = new JMenuItem("Test", KeyEvent.VK_T);
+		menuItem.addActionListener(this);
 		menu.add(menuItem);
 
 		menuItem = new JMenuItem("Neural Network", KeyEvent.VK_N);
@@ -219,6 +226,23 @@ public class MainDemo extends JFrame implements ActionListener,
 
 	public void actionPerformed(ActionEvent x) {
 		System.out.println("Item clicked: " + x.getActionCommand());
+		Species n = new Species();
+		
+		if(x.getActionCommand() == "Test"){
+			n = db.listIterator();
+
+			while (n != null) {
+				n.initRemarks();
+				n = db.listIterator();
+			}
+		}
+		if(x.getActionCommand() == "Save As..."){
+		//	JFileChooser chooser = new JFileChooser();
+			
+		}
+		if(x.getActionCommand() == "Exit"){
+			System.exit(0);
+		}
 	}
 
 	public void valueChanged(ListSelectionEvent x) {
@@ -273,12 +297,12 @@ public class MainDemo extends JFrame implements ActionListener,
 				data = db.getByName(key).toArray();
 			} else if (group.getSelection().getActionCommand()
 					.equals("acodonMode")) {
-				columnNames = new String[] { "Anti-codon", "Mean (Free Energy)" };
+				columnNames = new String[] { "Anti-codon", "Mean (Free Energy)", "Remarks" };
 				db.getByName(key).updateTables();
 				data = db.getByName(key).acodonTableToArray();
 			} else if (group.getSelection().getActionCommand()
 					.equals("aacidMode")) {
-				columnNames = new String[] { "Amino Acid", "Mean (Free Energy)" };
+				columnNames = new String[] { "Amino Acid", "Mean (Free Energy)", "Remarks" };
 				db.getByName(key).updateTables();
 				data = db.getByName(key).aacidTableToArray();
 			}
