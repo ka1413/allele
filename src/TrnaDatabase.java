@@ -280,17 +280,19 @@ public class TrnaDatabase {
 		} else {
 			rover = head;
 			int i = 0;
-
-			while (rover.next != null) {
+			while(rover != null) {
 				if (i == n) {
 					break;
 				} else {
 					i++;
 				}
-
-				rover = rover.next;
+				if(rover.next == null){
+					break;
+				}
+				else{
+					rover = rover.next;
+				}
 			}
-
 			return rover;
 		}
 	}
