@@ -8,7 +8,6 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
 import javax.swing.ButtonGroup;
-import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
