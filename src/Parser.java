@@ -176,7 +176,7 @@ public class Parser {
 	}
 
 	public static void main(String args[]) throws Exception {
-		String inputFile = "C:\\Temp\\results_eukaryotic.txt";
+		String inputFile = "C:\\Temp\\results_eukaryotic.txt"; //results_eukaryotic.txt
 		Parser parser = new Parser(inputFile);
 		parser.parseTrnaSorted();
 //		Species spec = new Species();
