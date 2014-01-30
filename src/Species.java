@@ -130,7 +130,7 @@ public class Species implements Serializable {
 				}
 				
 				avg = avg / temp.size();
-				//this.remarks1[i] = temp.size();
+				this.remarks1[i] = temp.size();
 				this.acodonTableFE[i] = avg;
 			} else {
 				this.acodonTableFE[i] = null;
@@ -154,7 +154,7 @@ public class Species implements Serializable {
 				}
 				
 				avg = avg / temp.size();
-				//this.remarks2[i] = temp.size();
+				this.remarks2[i] = temp.size();
 				this.aacidTableFE[i] = avg;
 			} else {
 				this.aacidTableFE[i] = null;
@@ -170,7 +170,7 @@ public class Species implements Serializable {
 		for(int i=0; i<acodonTable.length; i++){
 			data[i][0] = acodonTable[i];
 			data[i][1] = this.acodonTableFE[i];
-			//data[i][2] = this.remarks1[i];
+			data[i][2] = this.remarks1[i];
 		}
 		
 		return data;
@@ -182,7 +182,7 @@ public class Species implements Serializable {
 		for(int i=0; i<aacidTable.length; i++){
 			data[i][0] = aacidTable[i];
 			data[i][1] = this.aacidTableFE[i];
-			//data[i][2] = this.remarks2[i];
+			data[i][2] = this.remarks2[i];
 		}
 		
 		return data;

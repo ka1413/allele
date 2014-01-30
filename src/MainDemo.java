@@ -84,7 +84,7 @@ public class MainDemo extends JFrame implements ActionListener,
 
 		menuItem = new JMenuItem("Phylogegnetic Tree", KeyEvent.VK_T);
 		menu.add(menuItem);
-		
+
 		menuItem = new JMenuItem("Test", KeyEvent.VK_T);
 		menuItem.addActionListener(this);
 		menu.add(menuItem);
@@ -134,17 +134,14 @@ public class MainDemo extends JFrame implements ActionListener,
 				return getPreferredSize().width < getParent().getWidth();
 			}
 		};
-		
+
 		RowSorter<TableModel> sorter = new TableRowSorter<TableModel>(model);
 		table1.setRowSorter(sorter);
 
 		columnNames = new String[] { "Name", "Anti-codon", "Amino Acid",
 				"Free Energy" };
 
-	
-		data = db.getSelectedNode(44).toArray();
-
-		//data = 
+		data = db.getSelectedNode(0).toArray();
 
 		model = new DefaultTableModel(data, columnNames) {
 			public Class getColumnClass(int column) {
@@ -157,16 +154,16 @@ public class MainDemo extends JFrame implements ActionListener,
 				return returnValue;
 			}
 		};
-		
+
 		table2 = new JTable(model) {
 			public boolean getScrollableTracksViewportWidth() {
 				return getPreferredSize().width < getParent().getWidth();
 			}
 		};
-		
+
 		sorter = new TableRowSorter<TableModel>(model);
 		table2.setRowSorter(sorter);
-		
+
 		// table1.getSelectionModel().addListSelectionListener(this);
 		// table2.getSelectionModel().addListSelectionListener(this);
 
@@ -229,20 +226,20 @@ public class MainDemo extends JFrame implements ActionListener,
 	public void actionPerformed(ActionEvent x) {
 		System.out.println("Item clicked: " + x.getActionCommand());
 		Species n = new Species();
-		
-		if(x.getActionCommand() == "Test"){
-		//	n = db.listIterator();
-		deconstruct();
-		//	while (n != null) {
-		//		n.initRemarks();
-		//		n = db.listIterator();
-		//	}
+
+		if (x.getActionCommand() == "Test") {
+			// n = db.listIterator();
+			deconstruct();
+			// while (n != null) {
+			// n.initRemarks();
+			// n = db.listIterator();
+			// }
 		}
-		if(x.getActionCommand() == "Save As..."){
-		//	JFileChooser chooser = new JFileChooser();
-			
+		if (x.getActionCommand() == "Save As...") {
+			// JFileChooser chooser = new JFileChooser();
+
 		}
-		if(x.getActionCommand() == "Exit"){
+		if (x.getActionCommand() == "Exit") {
 			System.exit(0);
 		}
 	}
@@ -297,56 +294,97 @@ public class MainDemo extends JFrame implements ActionListener,
 				columnNames = new String[] { "Name", "Anti-codon",
 						"Amino Acid", "Free Energy" };
 				data = db.getByName(key).toArray();
+				
+				TableModel model = new DefaultTableModel(data, columnNames) {
+					public Class getColumnClass(int column) {
+						Class returnValue;
+						if ((column >= 0) && (column < getColumnCount())) {
+							returnValue = getValueAt(0, column).getClass();
+						} else {
+							returnValue = Object.class;
+						}
+						return returnValue;
+					}
+				};
+
+				table2 = new JTable(data, columnNames) {
+					public boolean getScrollableTracksViewportWidth() {
+						return getPreferredSize().width < getParent().getWidth();
+					}
+				};
+				
+				TableColumn column = null;
+				for (int i = 0; i < 4; i++) {
+					column = table2.getColumnModel().getColumn(i);
+					if (i == 0) {
+						column.setPreferredWidth(300);
+						column.setMinWidth(200);
+					} else {
+						column.setPreferredWidth(50);
+						column.setMinWidth(50);
+					}
+				}
+				
+				RowSorter<TableModel> sorter = new TableRowSorter<TableModel>(model);
+				table2.setRowSorter(sorter);
 			} else if (group.getSelection().getActionCommand()
 					.equals("acodonMode")) {
-				columnNames = new String[] { "Anti-codon", "Mean (Free Energy)", "Remarks" };
+				columnNames = new String[] { "Anti-codon",
+						"Mean (Free Energy)", "Remarks" };
 				db.getByName(key).updateTables();
 				data = db.getByName(key).acodonTableToArray();
+				
+				TableModel model = new DefaultTableModel(data, columnNames) {
+					public Class getColumnClass(int column) {
+						Class returnValue;
+						if ((column >= 0) && (column < getColumnCount())) {
+							returnValue = getValueAt(0, column).getClass();
+						} else {
+							returnValue = Object.class;
+						}
+						return returnValue;
+					}
+				};
+
+				table2 = new JTable(data, columnNames) {
+					public boolean getScrollableTracksViewportWidth() {
+						return getPreferredSize().width < getParent().getWidth();
+					}
+				};
+				
+				RowSorter<TableModel> sorter = new TableRowSorter<TableModel>(model);
+				table2.setRowSorter(sorter);
 			} else if (group.getSelection().getActionCommand()
 					.equals("aacidMode")) {
-				columnNames = new String[] { "Amino Acid", "Mean (Free Energy)", "Remarks" };
+				columnNames = new String[] { "Amino Acid",
+						"Mean (Free Energy)", "Remarks" };
 				db.getByName(key).updateTables();
 				data = db.getByName(key).aacidTableToArray();
+				
+				TableModel model = new DefaultTableModel(data, columnNames) {
+					public Class getColumnClass(int column) {
+						Class returnValue;
+						if ((column >= 0) && (column < getColumnCount())) {
+							returnValue = getValueAt(0, column).getClass();
+						} else {
+							returnValue = Object.class;
+						}
+						return returnValue;
+					}
+				};
+
+				table2 = new JTable(data, columnNames) {
+					public boolean getScrollableTracksViewportWidth() {
+						return getPreferredSize().width < getParent().getWidth();
+					}
+				};
+				
+				RowSorter<TableModel> sorter = new TableRowSorter<TableModel>(model);
+				table2.setRowSorter(sorter);
 			}
 
-			// columnNames = new String[] { "Name", "Anti-codon", "Amino Acid",
-			// "Free Energy" };
-			// data = db.getSelectedNode(row).toArray();
-
-//			TableModel model = new DefaultTableModel(data, columnNames) {
-//				public Class getColumnClass(int column) {
-//					Class returnValue;
-//					if ((column >= 0) && (column < getColumnCount())) {
-//						returnValue = getValueAt(0, column).getClass();
-//					} else {
-//						returnValue = Object.class;
-//					}
-//					return returnValue;
-//				}
-//			};
-			
-			table2 = new JTable(data, columnNames) {
-				public boolean getScrollableTracksViewportWidth() {
-					return getPreferredSize().width < getParent().getWidth();
-				}
-			};
-			
-//			RowSorter<TableModel> sorter = new TableRowSorter<TableModel>(model);
-//			table2.setRowSorter(sorter);
 			table2.addMouseListener(this);
 			table2.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
-
-			// TableColumn column = null;
-			// for (int i = 0; i < 4; i++) {
-			// column = table2.getColumnModel().getColumn(i);
-			// if (i == 0) {
-			// column.setPreferredWidth(300);
-			// column.setMinWidth(200);
-			// } else {
-			// column.setPreferredWidth(50);
-			// column.setMinWidth(50);
-			// }
-			// }
 
 			panel = new JPanel();
 			scrollPane2 = new JScrollPane(table2);
@@ -390,7 +428,8 @@ public class MainDemo extends JFrame implements ActionListener,
 		// TODO Auto-generated method stub
 
 	}
-	public void construct(){
+
+	public void construct() {
 		// Create the menu bar.
 		menuBar = new JMenuBar();
 
@@ -432,7 +471,7 @@ public class MainDemo extends JFrame implements ActionListener,
 
 		menuItem = new JMenuItem("Phylogegnetic Tree", KeyEvent.VK_T);
 		menu.add(menuItem);
-		
+
 		menuItem = new JMenuItem("Test", KeyEvent.VK_T);
 		menuItem.addActionListener(this);
 		menu.add(menuItem);
@@ -482,7 +521,7 @@ public class MainDemo extends JFrame implements ActionListener,
 				return getPreferredSize().width < getParent().getWidth();
 			}
 		};
-		
+
 		RowSorter<TableModel> sorter = new TableRowSorter<TableModel>(model);
 		table1.setRowSorter(sorter);
 
@@ -502,16 +541,16 @@ public class MainDemo extends JFrame implements ActionListener,
 				return returnValue;
 			}
 		};
-		
+
 		table2 = new JTable(model) {
 			public boolean getScrollableTracksViewportWidth() {
 				return getPreferredSize().width < getParent().getWidth();
 			}
 		};
-		
+
 		sorter = new TableRowSorter<TableModel>(model);
 		table2.setRowSorter(sorter);
-		
+
 		// table1.getSelectionModel().addListSelectionListener(this);
 		// table2.getSelectionModel().addListSelectionListener(this);
 
@@ -570,8 +609,8 @@ public class MainDemo extends JFrame implements ActionListener,
 		this.pack();
 		this.repaint();
 	}
-	
-	public void deconstruct(){
+
+	public void deconstruct() {
 		table1.removeAll();
 		this.repaint();
 		table2.removeAll();
@@ -579,10 +618,11 @@ public class MainDemo extends JFrame implements ActionListener,
 		scrollPane2.removeAll();
 		splitPane.removeAll();
 		panel.removeAll();
-	//	this.removeAll();
-	//	this.repaint();
-		
+		// this.removeAll();
+		// this.repaint();
+
 	}
+
 	public static void main(String args[]) throws Exception {
 		MainDemo w;
 		try {
@@ -593,5 +633,5 @@ public class MainDemo extends JFrame implements ActionListener,
 			e.printStackTrace();
 		}
 	}
-	
+
 }
