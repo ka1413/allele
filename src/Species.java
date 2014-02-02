@@ -133,7 +133,8 @@ public class Species implements Serializable {
 				this.remarks1[i] = temp.size();
 				this.acodonTableFE[i] = avg;
 			} else {
-				this.acodonTableFE[i] = null;
+				this.acodonTableFE[i] = 0f;
+				this.remarks1[i] = 0;
 			}
 			
 			temp.clear();
@@ -157,7 +158,8 @@ public class Species implements Serializable {
 				this.remarks2[i] = temp.size();
 				this.aacidTableFE[i] = avg;
 			} else {
-				this.aacidTableFE[i] = null;
+				this.aacidTableFE[i] = 0f;
+				this.remarks2[i] = 0;
 			}
 			
 			temp.clear();
