@@ -31,11 +31,22 @@ class TrnaDatabaseDemo {
 								db.insert(n);
 								break;
 							case 1: n = new Species();
-								n.userInput();
+								/*n.userInput();
 								isSuccessful = db.delete(n);
 								
 								if(isSuccessful) JOptionPane.showMessageDialog(null, "Done");
 								else JOptionPane.showMessageDialog(null, "Error occured");
+								break;*/
+							
+								n = db.getSelectedNode(Integer.parseInt(JOptionPane
+										.showInputDialog("Enter Index")));
+								isSuccessful = db.delete(n);
+		
+								if (isSuccessful)
+									JOptionPane.showMessageDialog(null, "Done");
+								else
+									JOptionPane
+											.showMessageDialog(null, "Error occured");
 								break;
 							case 2: n = new Species(); m = new Species();
 								JOptionPane.showMessageDialog(null, "Enter attributes of node to be edited");
@@ -94,10 +105,12 @@ class TrnaDatabaseDemo {
 	static void showList(TrnaDatabase db){
 		Species n = db.listIterator();
 		System.out.println("List:\n");
+		int i=0;
 		
 		while(n != null){
-			System.out.println(n.toString() + "\n");
+			System.out.println(i + " " + n.toString() + "\n");
 			n = db.listIterator();
+			i++;
 		}
 	}
 }
