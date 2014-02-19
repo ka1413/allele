@@ -25,8 +25,7 @@ import javax.swing.table.TableColumn;
 import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
 
-public class MainDemo extends JFrame implements ActionListener,
-		ListSelectionListener, MouseListener {
+public class MainDemo extends JFrame implements ActionListener, ListSelectionListener, MouseListener {
 	private JMenuBar menuBar;
 	private JMenu menu;
 	private JMenuItem menuItem;
@@ -49,14 +48,12 @@ public class MainDemo extends JFrame implements ActionListener,
 		// Build the first menu.
 		menu = new JMenu("File");
 		menu.setMnemonic(KeyEvent.VK_F);
-		menu.getAccessibleContext().setAccessibleDescription(
-				"Save/Load the database of tRNAs");
+		menu.getAccessibleContext().setAccessibleDescription("Save/Load the database of tRNAs");
 		menuBar.add(menu);
 
 		// a group of JMenuItems
 		menuItem = new JMenuItem("Load database", KeyEvent.VK_L);
-		menu.getAccessibleContext().setAccessibleDescription(
-				"Load database other than the default");
+		menu.getAccessibleContext().setAccessibleDescription("Load database other than the default");
 		menuItem.addActionListener(this);
 		menu.add(menuItem);
 
@@ -64,8 +61,7 @@ public class MainDemo extends JFrame implements ActionListener,
 		menu.add(menuItem);
 
 		menuItem = new JMenuItem("Save As...", KeyEvent.VK_A);
-		menu.getAccessibleContext().setAccessibleDescription(
-				"Save in a different filename");
+		menu.getAccessibleContext().setAccessibleDescription("Save in a different filename");
 		menuItem.addActionListener(this);
 		menu.add(menuItem);
 
@@ -78,8 +74,7 @@ public class MainDemo extends JFrame implements ActionListener,
 		// Build second menu in the menu bar.
 		menu = new JMenu("Functions");
 		menu.setMnemonic(KeyEvent.VK_U);
-		menu.getAccessibleContext().setAccessibleDescription(
-				"Use different functions provided by the application");
+		menu.getAccessibleContext().setAccessibleDescription("Use different functions provided by the application");
 		menuBar.add(menu);
 
 		menuItem = new JMenuItem("Phylogegnetic Tree", KeyEvent.VK_T);
@@ -112,8 +107,7 @@ public class MainDemo extends JFrame implements ActionListener,
 
 		this.setJMenuBar(menuBar);
 
-		String[] columnNames = { "Name", "Known as", "Kingdom", "Phylum",
-				"Class", "Order", "Family", "Genus", "Number of tRNAs" };
+		String[] columnNames = { "Name", "Known as", "Kingdom", "Phylum", "Class", "Order", "Family", "Genus", "Number of tRNAs" };
 
 		Object[][] data = db.toArray();
 
@@ -138,8 +132,7 @@ public class MainDemo extends JFrame implements ActionListener,
 		RowSorter<TableModel> sorter = new TableRowSorter<TableModel>(model);
 		table1.setRowSorter(sorter);
 
-		columnNames = new String[] { "Name", "Anti-codon", "Amino Acid",
-				"Free Energy" };
+		columnNames = new String[] { "Name", "Anti-codon", "Amino Acid", "Free Energy" };
 
 		data = db.getSelectedNode(0).toArray();
 
@@ -203,8 +196,7 @@ public class MainDemo extends JFrame implements ActionListener,
 		scrollPane2 = new JScrollPane(table2);
 
 		// Create a split pane with the two scroll panes in it.
-		splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, scrollPane1,
-				scrollPane2);
+		splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, scrollPane1, scrollPane2);
 		splitPane.setOneTouchExpandable(true);
 		splitPane.setDividerLocation(300);
 
@@ -225,7 +217,7 @@ public class MainDemo extends JFrame implements ActionListener,
 
 	public void actionPerformed(ActionEvent x) {
 		System.out.println("Item clicked: " + x.getActionCommand());
-		Species n = new Species();
+		// Species n = new Species();
 
 		if (x.getActionCommand() == "Test") {
 			// n = db.listIterator();
@@ -291,10 +283,9 @@ public class MainDemo extends JFrame implements ActionListener,
 			System.out.println(group.getSelection().getActionCommand());
 
 			if (group.getSelection().getActionCommand().equals("allMode")) {
-				columnNames = new String[] { "Name", "Anti-codon",
-						"Amino Acid", "Free Energy" };
+				columnNames = new String[] { "Name", "Anti-codon", "Amino Acid", "Free Energy" };
 				data = db.getByName(key).toArray();
-				
+
 				TableModel model = new DefaultTableModel(data, columnNames) {
 					public Class getColumnClass(int column) {
 						Class returnValue;
@@ -312,7 +303,7 @@ public class MainDemo extends JFrame implements ActionListener,
 						return getPreferredSize().width < getParent().getWidth();
 					}
 				};
-				
+
 				TableColumn column = null;
 				for (int i = 0; i < 4; i++) {
 					column = table2.getColumnModel().getColumn(i);
@@ -324,16 +315,14 @@ public class MainDemo extends JFrame implements ActionListener,
 						column.setMinWidth(50);
 					}
 				}
-				
+
 				RowSorter<TableModel> sorter = new TableRowSorter<TableModel>(model);
 				table2.setRowSorter(sorter);
-			} else if (group.getSelection().getActionCommand()
-					.equals("acodonMode")) {
-				columnNames = new String[] { "Anti-codon",
-						"Mean (Free Energy)", "Remarks" };
+			} else if (group.getSelection().getActionCommand().equals("acodonMode")) {
+				columnNames = new String[] { "Anti-codon", "Mean (Free Energy)", "Remarks" };
 				db.getByName(key).updateTables();
 				data = db.getByName(key).acodonTableToArray();
-				
+
 				TableModel model = new DefaultTableModel(data, columnNames) {
 					public Class getColumnClass(int column) {
 						Class returnValue;
@@ -351,16 +340,14 @@ public class MainDemo extends JFrame implements ActionListener,
 						return getPreferredSize().width < getParent().getWidth();
 					}
 				};
-				
+
 				RowSorter<TableModel> sorter = new TableRowSorter<TableModel>(model);
 				table2.setRowSorter(sorter);
-			} else if (group.getSelection().getActionCommand()
-					.equals("aacidMode")) {
-				columnNames = new String[] { "Amino Acid",
-						"Mean (Free Energy)", "Remarks" };
+			} else if (group.getSelection().getActionCommand().equals("aacidMode")) {
+				columnNames = new String[] { "Amino Acid", "Mean (Free Energy)", "Remarks" };
 				db.getByName(key).updateTables();
 				data = db.getByName(key).aacidTableToArray();
-				
+
 				TableModel model = new DefaultTableModel(data, columnNames) {
 					public Class getColumnClass(int column) {
 						Class returnValue;
@@ -378,7 +365,7 @@ public class MainDemo extends JFrame implements ActionListener,
 						return getPreferredSize().width < getParent().getWidth();
 					}
 				};
-				
+
 				RowSorter<TableModel> sorter = new TableRowSorter<TableModel>(model);
 				table2.setRowSorter(sorter);
 			}
@@ -389,8 +376,7 @@ public class MainDemo extends JFrame implements ActionListener,
 			panel = new JPanel();
 			scrollPane2 = new JScrollPane(table2);
 			int divider = splitPane.getDividerLocation();
-			splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT,
-					scrollPane1, scrollPane2);
+			splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, scrollPane1, scrollPane2);
 			splitPane.setDividerLocation(divider);
 
 			panel.add(splitPane);
@@ -436,14 +422,12 @@ public class MainDemo extends JFrame implements ActionListener,
 		// Build the first menu.
 		menu = new JMenu("File");
 		menu.setMnemonic(KeyEvent.VK_F);
-		menu.getAccessibleContext().setAccessibleDescription(
-				"Save/Load the database of tRNAs");
+		menu.getAccessibleContext().setAccessibleDescription("Save/Load the database of tRNAs");
 		menuBar.add(menu);
 
 		// a group of JMenuItems
 		menuItem = new JMenuItem("Load database", KeyEvent.VK_L);
-		menu.getAccessibleContext().setAccessibleDescription(
-				"Load database other than the default");
+		menu.getAccessibleContext().setAccessibleDescription("Load database other than the default");
 		menuItem.addActionListener(this);
 		menu.add(menuItem);
 
@@ -451,8 +435,7 @@ public class MainDemo extends JFrame implements ActionListener,
 		menu.add(menuItem);
 
 		menuItem = new JMenuItem("Save As...", KeyEvent.VK_A);
-		menu.getAccessibleContext().setAccessibleDescription(
-				"Save in a different filename");
+		menu.getAccessibleContext().setAccessibleDescription("Save in a different filename");
 		menuItem.addActionListener(this);
 		menu.add(menuItem);
 
@@ -465,8 +448,7 @@ public class MainDemo extends JFrame implements ActionListener,
 		// Build second menu in the menu bar.
 		menu = new JMenu("Functions");
 		menu.setMnemonic(KeyEvent.VK_U);
-		menu.getAccessibleContext().setAccessibleDescription(
-				"Use different functions provided by the application");
+		menu.getAccessibleContext().setAccessibleDescription("Use different functions provided by the application");
 		menuBar.add(menu);
 
 		menuItem = new JMenuItem("Phylogegnetic Tree", KeyEvent.VK_T);
@@ -499,8 +481,7 @@ public class MainDemo extends JFrame implements ActionListener,
 
 		this.setJMenuBar(menuBar);
 
-		String[] columnNames = { "Name", "Known as", "Kingdom", "Phylum",
-				"Class", "Order", "Family", "Genus", "Number of tRNAs" };
+		String[] columnNames = { "Name", "Known as", "Kingdom", "Phylum", "Class", "Order", "Family", "Genus", "Number of tRNAs" };
 
 		Object[][] data = db.toArray();
 
@@ -525,8 +506,7 @@ public class MainDemo extends JFrame implements ActionListener,
 		RowSorter<TableModel> sorter = new TableRowSorter<TableModel>(model);
 		table1.setRowSorter(sorter);
 
-		columnNames = new String[] { "Name", "Anti-codon", "Amino Acid",
-				"Free Energy" };
+		columnNames = new String[] { "Name", "Anti-codon", "Amino Acid", "Free Energy" };
 
 		data = db.getSelectedNode(44).toArray();
 
@@ -590,8 +570,7 @@ public class MainDemo extends JFrame implements ActionListener,
 		scrollPane2 = new JScrollPane(table2);
 
 		// Create a split pane with the two scroll panes in it.
-		splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, scrollPane1,
-				scrollPane2);
+		splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, scrollPane1, scrollPane2);
 		splitPane.setOneTouchExpandable(true);
 		splitPane.setDividerLocation(300);
 
