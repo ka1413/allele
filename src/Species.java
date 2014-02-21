@@ -3,7 +3,7 @@ import java.io.*;
 import java.util.ArrayList;
 
 public class Species implements Serializable {
-	public String name, nickname, kingdom, phylum, classs, order, family, genus;
+	public String name, nickname, domain, kingdom, phylum, classs, order, family, genus;
 	public int numTrna;
 	public Float[] acodonTableFE = new Float[64], aacidTableFE = new Float[23];
 	public int[] remarks1 = new int[64], remarks2 = new int[23];
@@ -17,7 +17,7 @@ public class Species implements Serializable {
 			"TCG", "TCT", "TGA", "TGC", "TGG", "TGT", "TTA", "TTC", "TTG", "TTT" };
 	public static String[] aacidTable = new String[] { "Ala", "Cys", "Asp", "Glu", "Phe", "Gly",
 			"His", "Ile", "Lys", "Leu", "Met", "Asn", "Pyl", "Pro", "Gln", "Arg", "Ser", "Thr",
-			"Sec", "Val", "Trp", "Tyr", "SeC(e)" };
+			"SeC", "Val", "Trp", "Tyr", "SeC(e)" };
 
 	private static final long serialVersionUID = 1L;
 
@@ -25,13 +25,14 @@ public class Species implements Serializable {
 
 	}
 
-	Species(String name, String nickname, String kingdom, String phylum, String classs,
+	Species(String name, String nickname, String domain, String kingdom, String phylum, String classs,
 			String order, String family, String genus, ArrayList<Trna> trnaList, Species next) {
 		this.name = name;
 		this.nickname = nickname;
 		this.trnaList = trnaList;
 		this.numTrna = trnaList.size();
-
+		
+		this.domain = domain;
 		this.kingdom = kingdom;
 		this.phylum = phylum;
 		this.classs = classs;
@@ -48,7 +49,8 @@ public class Species implements Serializable {
 		this.nickname = s.nickname;
 		this.numTrna = s.numTrna;
 		this.trnaList = s.trnaList;
-
+		
+		this.domain = s.domain;
 		this.kingdom = s.kingdom;
 		this.phylum = s.phylum;
 		this.classs = s.classs;
@@ -60,12 +62,14 @@ public class Species implements Serializable {
 	}
 
 	public int numTrna() {
+		this.numTrna = trnaList.size();
 		return trnaList.size();
 	}
 
 	public void userInput() {
 		this.name = JOptionPane.showInputDialog("Enter Name");
 		this.nickname = JOptionPane.showInputDialog("Enter Nickname");
+		this.domain = JOptionPane.showInputDialog("Enter Domain");
 		this.kingdom = JOptionPane.showInputDialog("Enter Kingdom");
 		this.phylum = JOptionPane.showInputDialog("Enter Phylum");
 		this.classs = JOptionPane.showInputDialog("Enter Class");
@@ -96,7 +100,7 @@ public class Species implements Serializable {
 		for (int i = 0; i < this.trnaList.size(); i++) {
 			data[i][0] = this.trnaList.get(i).name;
 			data[i][1] = this.trnaList.get(i).acodon;
-			data[i][2] = this.trnaList.get(i).isotype;
+			data[i][2] = this.trnaList.get(i).aacid;
 			data[i][3] = this.trnaList.get(i).fenergy;
 		}
 
@@ -139,7 +143,7 @@ public class Species implements Serializable {
 		for (int i = 0; i < aacidTable.length; i++) {
 			for (int j = 0; j < trnaList.size(); j++) {
 
-				if (aacidTable[i].equals(trnaList.get(j).isotype)) {
+				if (aacidTable[i].equals(trnaList.get(j).aacid)) {
 					temp.add(trnaList.get(j));
 				}
 			}

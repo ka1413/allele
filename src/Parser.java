@@ -17,17 +17,17 @@ public class Parser {
 	public Parser(String fileName) {
 		fFilePath = Paths.get(fileName);
 	}
-	
+
 	public TrnaDatabase parseTrnaSorted() throws Exception {
 		TrnaDatabase db = new TrnaDatabase();
 		db.loadFromFile("sample.dat");
 		ArrayList<Trna> trnaList = new ArrayList<Trna>(this.parseTrna());
-		
+
 		Species s;
 		ListIterator<Trna> lit;
 		Trna t;
 		String string1, string2;
-		
+
 		s = db.listIterator();
 		while (s != null) {
 			lit = trnaList.listIterator();
@@ -36,41 +36,42 @@ public class Parser {
 				string1 = s.name.replace(" ", "_");
 				string1 = string1.toUpperCase();
 				string2 = t.name.toUpperCase();
-				//System.out.println(string1 + "===" + string2);
-				if(string2.contains(string1)){
+				// System.out.println(string1 + "===" + string2);
+				if (string2.contains(string1)) {
 					s.trnaList.add(t);
 					lit.remove();
 				}
 			}
-			//System.out.println(s.toString());
+			// System.out.println(s.toString());
 			s = db.listIterator();
 		}
-		
+
 		System.out.println(trnaList.size());
 		db.saveToFile("sample.dat");
 		return null;
 	}
-	
+
 	public TrnaDatabase parseSpecies() throws IOException {
 		TrnaDatabase db = new TrnaDatabase();
-//		int i=0;
+		// int i=0;
 
 		try (Scanner scanner = new Scanner(fFilePath, ENCODING.name())) {
 			while (scanner.hasNextLine()) {
 				Species temp = processLineForSpecies(scanner.nextLine());
 				if (temp != null) {
 					db.insert(temp);
-//					System.out.println(db.getSelectedNode(i++).toString());
+					// System.out.println(db.getSelectedNode(i++).toString());
 				}
 			}
 		}
-		
+
 		return db;
 	}
-	
+
 	protected Species processLineForSpecies(String line) {
 		Species s;
-		String name, nickname, kingdom, phylum, classs, order, family, genus;
+		String name, nickname, domain, kingdom, phylum, classs, order, family, genus;
+		String[] temp;
 		
 		Scanner scanner = new Scanner(line);
 		scanner.useDelimiter(",");
@@ -78,29 +79,32 @@ public class Parser {
 			// assumes the line has a certain structure
 			name = scanner.next();
 			nickname = scanner.next();
+			domain = scanner.next();
 			kingdom = scanner.next();
 			phylum = scanner.next();
 			classs = scanner.next();
 			order = scanner.next();
 			family = scanner.next();
-			genus = scanner.next();
-			ArrayList<Trna> trnaList =  new ArrayList<Trna>();
-//			System.out.println(name + nickname + kingdom + "_" + phylum + "_" + classs + "_" + order + "_" + family + "_" + genus);
-			s = new Species(name, nickname, kingdom, phylum, classs, order, family, genus, trnaList, null);
+				temp = name.split(" ");
+			genus = temp[0];
+			ArrayList<Trna> trnaList = new ArrayList<Trna>();
+			// System.out.println(name + nickname + kingdom + "_" + phylum + "_"
+			// + classs + "_" + order + "_" + family + "_" + genus);
+			s = new Species(name, nickname, domain, kingdom, phylum, classs, order, family, genus, trnaList, null);
 			return s;
 		} else {
 			System.out.println("Empty or invalid line. Unable to process.");
 			return null;
 		}
 	}
-	
+
 	public ArrayList<Trna> parseTrna() throws IOException {
-		ArrayList<Trna> trnaList =  new ArrayList<Trna>();
-		
+		ArrayList<Trna> trnaList = new ArrayList<Trna>();
+
 		// let user pick format
-		
+
 		trnaList = new ArrayList<Trna>(processByThrees());
-		
+
 		return trnaList;
 	}
 
@@ -166,8 +170,7 @@ public class Parser {
 			temp = temp.substring(1, temp.length() - 1);
 			this.fenergy = Float.parseFloat(temp);
 
-			Trna t = new Trna(this.name, this.acodon, this.isotype,
-					this.sequence, this.fenergy);
+			Trna t = new Trna(this.name, this.acodon, this.isotype, this.sequence, this.fenergy);
 			return t;
 		} else {
 			System.out.println("Empty or invalid line. Unable to process.");
@@ -175,35 +178,63 @@ public class Parser {
 		}
 	}
 
-	public static void main(String args[]) throws Exception {
-		String inputFile = "C:\\Temp\\results_eukaryotic.txt"; //results_eukaryotic.txt
-		Parser parser = new Parser(inputFile);
-		parser.parseTrnaSorted();
-//		Species spec = new Species();
-//		
-//		TrnaDatabase db = new TrnaDatabase();
-//		
-//		db.loadFromFile("sample.dat");
-//		
-//		spec = db.getSelectedNode(2);
-//		
-//		System.out.println(spec.toString());
-//		
-//		ArrayList<Trna> trnaList = new ArrayList<Trna>(parser.parseTrna());
-//
-//		spec.trnaList = new ArrayList<Trna>(trnaList);
-//		System.out.println(spec.showTrnaList());
-//		
-//		//db.saveToFile("sample.dat");
+	protected void listAllAacids() {
+		ArrayList<String> aacidList = new ArrayList<String>();
 		
-//		TrnaDatabase db = parser.parseSpecies();
-//		Species n = db.listIterator();
-//		while(n != null){
-//			System.out.println(n.toString());
-//			n = db.listIterator();
-//		}
-//		
-//		db.saveToFile("sample.dat");
+		try {
+			ArrayList<Trna> trnaList = new ArrayList<Trna>(this.parseTrna());
+			
+			ListIterator<Trna> lit = trnaList.listIterator();
+			Trna t;
+			while (lit.hasNext()) {
+				t = lit.next();
+				if (aacidList.contains(t.aacid)) {
+
+				} else {
+					aacidList.add(t.aacid);
+				}
+			}
+
+			ListIterator<String> cid = aacidList.listIterator();
+			String s;
+			while (cid.hasNext()) {
+				s = cid.next();
+				System.out.println(s);
+			}
+			System.out.println(aacidList.size());
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	public static void main(String args[]) throws Exception {
+		String inputFile = "C:\\Temp\\Cricetulus_griseus.txt"; // results_eukaryotic.txt
+		Parser parser = new Parser(inputFile);
+		// parser.listAllAacids();
+		// parser.parseTrnaSorted();
+		
+		Species spec = new Species();
+		TrnaDatabase db = new TrnaDatabase();
+		db.loadFromFile("sample.dat");
+
+		spec = db.getSelectedNode(38); // index of species to be populated by trna
+		System.out.println(spec.toString());
+
+		ArrayList<Trna> trnaList = new ArrayList<Trna>(parser.parseTrna());
+		spec.trnaList = new ArrayList<Trna>(trnaList);
+		System.out.println(spec.showTrnaList());
+
+		db.saveToFile("sample.dat");
+
+		// TrnaDatabase db = parser.parseSpecies();
+		// Species n = db.listIterator();
+		// while(n != null){
+		// System.out.println(n.toString());
+		// n = db.listIterator();
+		// }
+		//
+		// db.saveToFile("sample.dat");
 	}
 
 }

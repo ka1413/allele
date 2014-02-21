@@ -107,7 +107,7 @@ public class MainDemo extends JFrame implements ActionListener, ListSelectionLis
 
 		this.setJMenuBar(menuBar);
 
-		String[] columnNames = { "Name", "Known as", "Kingdom", "Phylum", "Class", "Order", "Family", "Genus", "Number of tRNAs" };
+		String[] columnNames = { "Name", "Known as", "Domain", "Kingdom", "Phylum", "Class", "Order", "Family", "Genus", "Number of tRNAs" };
 
 		Object[][] data = db.toArray();
 
@@ -167,12 +167,12 @@ public class MainDemo extends JFrame implements ActionListener, ListSelectionLis
 		table2.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
 
 		TableColumn column = null;
-		for (int i = 0; i < 9; i++) {
+		for (int i = 0; i < 10; i++) {
 			column = table1.getColumnModel().getColumn(i);
 			if (i == 0) {
 				column.setPreferredWidth(200);
 				column.setMinWidth(200);
-			} else if (i < 8 && i > 0) {
+			} else if (i < 9 && i > 0) {
 				column.setPreferredWidth(100);
 				column.setMinWidth(100);
 			} else {

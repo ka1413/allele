@@ -108,7 +108,7 @@ class TrnaDatabaseDemo {
 		int i=0;
 		
 		while(n != null){
-			System.out.println(i + " " + n.toString() + "\n");
+			System.out.println(i + " " + n.toString());
 			n = db.listIterator();
 			i++;
 		}
