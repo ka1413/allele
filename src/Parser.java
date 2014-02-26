@@ -72,7 +72,7 @@ public class Parser {
 		Species s;
 		String name, nickname, domain, kingdom, phylum, classs, order, family, genus;
 		String[] temp;
-		
+
 		Scanner scanner = new Scanner(line);
 		scanner.useDelimiter(",");
 		if (scanner.hasNext()) {
@@ -85,7 +85,7 @@ public class Parser {
 			classs = scanner.next();
 			order = scanner.next();
 			family = scanner.next();
-				temp = name.split(" ");
+			temp = name.split(" ");
 			genus = temp[0];
 			ArrayList<Trna> trnaList = new ArrayList<Trna>();
 			// System.out.println(name + nickname + kingdom + "_" + phylum + "_"
@@ -138,7 +138,12 @@ public class Parser {
 			this.name = temp;
 			scanner.next();
 			scanner.next();
-			this.isotype = scanner.next();
+			temp = scanner.next();
+			if (temp.equals("SeC") || temp.equals("SeC(e)") || temp.equals("Sup")) {
+				this.isotype = "Stop";
+			} else {
+				this.isotype = temp;
+			}
 			temp = scanner.next();
 			temp = temp.substring(1, temp.length() - 1);
 			this.acodon = temp;
@@ -180,10 +185,10 @@ public class Parser {
 
 	protected void listAllAacids() {
 		ArrayList<String> aacidList = new ArrayList<String>();
-		
+
 		try {
 			ArrayList<Trna> trnaList = new ArrayList<Trna>(this.parseTrna());
-			
+
 			ListIterator<Trna> lit = trnaList.listIterator();
 			Trna t;
 			while (lit.hasNext()) {
@@ -207,29 +212,30 @@ public class Parser {
 			e.printStackTrace();
 		}
 	}
-	
+
 	public static void main(String args[]) throws Exception {
-		String inputFile = "C:\\Temp\\Cricetulus_griseus.txt"; // results_eukaryotic.txt
+		String inputFile = "C:\\Temp\\results_eukaryotic.txt"; // results_eukaryotic.txt
 		Parser parser = new Parser(inputFile);
 		// parser.listAllAacids();
-		// parser.parseTrnaSorted();
-		
-		Species spec = new Species();
-		TrnaDatabase db = new TrnaDatabase();
-		db.loadFromFile("sample.dat");
+		parser.parseTrnaSorted();
 
-		spec = db.getSelectedNode(38); // index of species to be populated by trna
-		System.out.println(spec.toString());
-
-		ArrayList<Trna> trnaList = new ArrayList<Trna>(parser.parseTrna());
-		spec.trnaList = new ArrayList<Trna>(trnaList);
-		System.out.println(spec.showTrnaList());
-
-		db.saveToFile("sample.dat");
+		// Species spec = new Species();
+		// TrnaDatabase db = new TrnaDatabase();
+		// db.loadFromFile("sample.dat");
+		//
+		// spec = db.getSelectedNode(38); // index of species to be populated by
+		// trna
+		// System.out.println(spec.toString());
+		//
+		// ArrayList<Trna> trnaList = new ArrayList<Trna>(parser.parseTrna());
+		// spec.trnaList = new ArrayList<Trna>(trnaList);
+		// System.out.println(spec.showTrnaList());
+		//
+		// db.saveToFile("sample.dat");
 
 		// TrnaDatabase db = parser.parseSpecies();
 		// Species n = db.listIterator();
-		// while(n != null){
+		// while (n != null) {
 		// System.out.println(n.toString());
 		// n = db.listIterator();
 		// }

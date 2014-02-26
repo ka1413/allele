@@ -14,15 +14,22 @@ public class Pca {
 	}
 	
 	public void exportMatrixAcodonLevelSpecies() throws IOException{
-		FileWriter file = new FileWriter("pca_species.csv");
+		FileWriter file = new FileWriter("pca_species_acodon.csv");
 		BufferedWriter bf = new BufferedWriter(file);
 		int i=0, j=0;
 		
 		bf.write(",");
-		for(i=0; i<Species.acodonTable.length - 1; i++){
+		for(i=0; i<Species.acodonTable.length; i++){
 			bf.write(Species.acodonTable[i] + ",");
 		}
-		bf.write(Species.acodonTable[i] + "\n");
+		
+		//bf.write("Domain,");
+		bf.write("Kingdom,");
+		bf.write("Phylum,");
+		bf.write("Class,");
+		bf.write("Order,");
+		bf.write("Family,");
+		bf.write("Genus\n");
 		
 		Species spec = new Species();
 		
@@ -30,14 +37,21 @@ public class Pca {
 		while(spec != null){
 			bf.write(spec.name + ",");
 			spec.updateTables();
-			for(j=0; j<spec.acodonTableFE.length - 1; j++){
+			for(j=0; j<spec.acodonTableFE.length; j++){
 				if(spec.acodonTableFE[j] != 0){
 					bf.write(spec.acodonTableFE[j] + ",");
 				} else {
 					bf.write(",");
 				}
 			}
-			bf.write(spec.acodonTableFE[i] + "\n");
+			
+			//bf.write(spec.domain + ",");
+			bf.write(spec.kingdom + ",");
+			bf.write(spec.phylum + ",");
+			bf.write(spec.classs + ",");
+			bf.write(spec.order + ",");
+			bf.write(spec.family + ",");
+			bf.write(spec.genus + "\n");
 			
 			spec = db.listIterator();
 		}
@@ -61,10 +75,10 @@ public class Pca {
 		
 		spec = db.listIterator();
 		while(spec != null){
-			if(existingFamily.contains(spec.genus)){
+			if(existingFamily.contains(spec.family)){
 				
 			} else {
-				existingFamily.add(spec.genus);
+				existingFamily.add(spec.family);
 			}
 			
 			spec = db.listIterator();
@@ -75,7 +89,7 @@ public class Pca {
 		for(i = 0; i<existingFamily.size(); i++){
 			spec = db.listIterator();
 			while(spec != null){
-				if (existingFamily.get(i).equals(spec.genus)) {
+				if (existingFamily.get(i).equals(spec.family)) {
 					bf.write(spec.name + ",");
 					spec.updateTables();
 					for (j = 0; j < spec.acodonTableFE.length - 1; j++) {
@@ -110,10 +124,10 @@ public class Pca {
 		
 		spec = db.listIterator();
 		while(spec != null){
-			if(existingFamily.contains(spec.classs)){
+			if(existingFamily.contains(spec.phylum)){
 				
 			} else {
-				existingFamily.add(spec.classs);
+				existingFamily.add(spec.phylum);
 			}
 			
 			spec = db.listIterator();
@@ -130,7 +144,7 @@ public class Pca {
 		for(i = 0; i<existingFamily.size(); i++){
 			spec = db.listIterator();
 			while(spec != null){
-				if (existingFamily.get(i).equals(spec.classs)) {
+				if (existingFamily.get(i).equals(spec.phylum)) {
 					bf.write(spec.name + ",");
 					spec.updateTables();
 					for (j = 0; j < spec.acodonTableFE.length - 1; j++) {
@@ -165,10 +179,10 @@ public class Pca {
 		
 		spec = db.listIterator();
 		while(spec != null){
-			if(existingFamily.contains(spec.phylum)){
+			if(existingFamily.contains(spec.kingdom)){
 				
 			} else {
-				existingFamily.add(spec.phylum);
+				existingFamily.add(spec.kingdom);
 			}
 			
 			spec = db.listIterator();
@@ -185,7 +199,7 @@ public class Pca {
 		for(i = 0; i<existingFamily.size(); i++){
 			spec = db.listIterator();
 			while(spec != null){
-				if (existingFamily.get(i).equals(spec.phylum)) {
+				if (existingFamily.get(i).equals(spec.kingdom)) {
 					bf.write(spec.name + ",");
 					spec.updateTables();
 					for (j = 0; j < spec.acodonTableFE.length - 1; j++) {
@@ -199,6 +213,52 @@ public class Pca {
 				}
 				spec = db.listIterator();
 			}
+		}
+		
+		bf.close();
+	}
+	
+	public void exportMatrixAacidLevelSpecies() throws IOException{
+		FileWriter file = new FileWriter("pca_species_aacid.csv");
+		BufferedWriter bf = new BufferedWriter(file);
+		int i=0, j=0;
+		
+		bf.write(",");
+		for(i=0; i<Species.aacidTable.length; i++){
+			bf.write(Species.aacidTable[i] + ",");
+		}
+		
+		//bf.write("Domain,");
+		bf.write("Kingdom,");
+		bf.write("Phylum,");
+		bf.write("Class,");
+		bf.write("Order,");
+		bf.write("Family,");
+		bf.write("Genus\n");
+		
+		Species spec = new Species();
+		
+		spec = db.listIterator();
+		while(spec != null){
+			bf.write(spec.name + ",");
+			spec.updateTables();
+			for(j=0; j<spec.aacidTableFE.length; j++){
+				if(spec.aacidTableFE[j] != 0){
+					bf.write(spec.aacidTableFE[j] + ",");
+				} else {
+					bf.write(",");
+				}
+			}
+			
+			//bf.write(spec.domain + ",");
+			bf.write(spec.kingdom + ",");
+			bf.write(spec.phylum + ",");
+			bf.write(spec.classs + ",");
+			bf.write(spec.order + ",");
+			bf.write(spec.family + ",");
+			bf.write(spec.genus + "\n");
+			
+			spec = db.listIterator();
 		}
 		
 		bf.close();
@@ -220,10 +280,10 @@ public class Pca {
 		
 		spec = db.listIterator();
 		while(spec != null){
-			if(existingFamily.contains(spec.phylum)){
+			if(existingFamily.contains(spec.kingdom)){
 				
 			} else {
-				existingFamily.add(spec.phylum);
+				existingFamily.add(spec.kingdom);
 			}
 			
 			spec = db.listIterator();
@@ -240,7 +300,7 @@ public class Pca {
 		for(i = 0; i<existingFamily.size(); i++){
 			spec = db.listIterator();
 			while(spec != null){
-				if (existingFamily.get(i).equals(spec.phylum)) {
+				if (existingFamily.get(i).equals(spec.kingdom)) {
 					bf.write(spec.name + ",");
 					spec.updateTables();
 					for (j = 0; j < spec.aacidTableFE.length - 1; j++) {
@@ -267,6 +327,6 @@ public class Pca {
 		
 		Pca pca = new Pca(gdb);
 		
-		pca.exportMatrixAacidLevelKingdom();
+		pca.exportMatrixAacidLevelSpecies();
 	}
 }

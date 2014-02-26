@@ -5,33 +5,33 @@ import java.util.ArrayList;
 public class Species implements Serializable {
 	public String name, nickname, domain, kingdom, phylum, classs, order, family, genus;
 	public int numTrna;
-	public Float[] acodonTableFE = new Float[64], aacidTableFE = new Float[23];
-	public int[] remarks1 = new int[64], remarks2 = new int[23];
 	public ArrayList<Trna> trnaList;
 	public Species next;
-	public static String[] acodonTable = new String[] { "AAA", "AAC", "AAG", "AAT", "ACA", "ACC",
-			"ACG", "ACT", "AGA", "AGC", "AGG", "AGT", "ATA", "ATC", "ATG", "ATT", "CAA", "CAC",
-			"CAG", "CAT", "CCA", "CCC", "CCG", "CCT", "CGA", "CGC", "CGG", "CGT", "CTA", "CTC",
-			"CTG", "CTT", "GAA", "GAC", "GAG", "GAT", "GCA", "GCC", "GCG", "GCT", "GGA", "GGC",
-			"GGG", "GGT", "GTA", "GTC", "GTG", "GTT", "TAA", "TAC", "TAG", "TAT", "TCA", "TCC",
-			"TCG", "TCT", "TGA", "TGC", "TGG", "TGT", "TTA", "TTC", "TTG", "TTT" };
-	public static String[] aacidTable = new String[] { "Ala", "Cys", "Asp", "Glu", "Phe", "Gly",
-			"His", "Ile", "Lys", "Leu", "Met", "Asn", "Pyl", "Pro", "Gln", "Arg", "Ser", "Thr",
-			"SeC", "Val", "Trp", "Tyr", "SeC(e)" };
-
+	public static String[] acodonTable = new String[] { "AAA", "AAC", "AAG", "AAT", "ACA", "ACC", "ACG",
+											"ACT", "AGA", "AGC", "AGG", "AGT", "ATA", "ATC", "ATG", "ATT",
+											"CAA", "CAC", "CAG", "CAT", "CCA", "CCC", "CCG", "CCT", "CGA",
+											"CGC", "CGG", "CGT", "CTA", "CTC", "CTG", "CTT", "GAA", "GAC",
+											"GAG", "GAT", "GCA", "GCC", "GCG", "GCT", "GGA", "GGC", "GGG",
+											"GGT", "GTA", "GTC", "GTG", "GTT", "TAA", "TAC", "TAG", "TAT",
+											"TCA", "TCC", "TCG", "TCT", "TGA", "TGC", "TGG", "TGT", "TTA",
+											"TTC", "TTG", "TTT" };
+	public static String[] aacidTable = new String[] { "Ala", "Cys", "Asp", "Glu", "Phe", "Gly", "His",
+											"Ile", "Lys", "Leu", "Met", "Asn", "Pro", "Gln", "Arg",
+											"Ser", "Thr", "Val", "Trp", "Tyr", "Stop" };
+	public int[] remarks1 = new int[acodonTable.length], remarks2 = new int[aacidTable.length];
+	public Float[] acodonTableFE = new Float[acodonTable.length], aacidTableFE = new Float[aacidTable.length];
 	private static final long serialVersionUID = 1L;
 
 	Species() {
 
 	}
 
-	Species(String name, String nickname, String domain, String kingdom, String phylum, String classs,
-			String order, String family, String genus, ArrayList<Trna> trnaList, Species next) {
+	Species(String name, String nickname, String domain, String kingdom, String phylum, String classs, String order, String family, String genus, ArrayList<Trna> trnaList, Species next) {
 		this.name = name;
 		this.nickname = nickname;
 		this.trnaList = trnaList;
 		this.numTrna = trnaList.size();
-		
+
 		this.domain = domain;
 		this.kingdom = kingdom;
 		this.phylum = phylum;
@@ -49,7 +49,7 @@ public class Species implements Serializable {
 		this.nickname = s.nickname;
 		this.numTrna = s.numTrna;
 		this.trnaList = s.trnaList;
-		
+
 		this.domain = s.domain;
 		this.kingdom = s.kingdom;
 		this.phylum = s.phylum;
