@@ -37,7 +37,6 @@ public class TrnaDatabase {
 				rover = rover.next;
 			rover.next = newNode;
 		}
-
 		i = head;
 	}
 

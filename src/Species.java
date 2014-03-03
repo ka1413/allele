@@ -1,12 +1,24 @@
 import javax.swing.*;
 import java.io.*;
 import java.util.ArrayList;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+
 
 public class Species implements Serializable {
 	public String name, nickname, domain, kingdom, phylum, classs, order, family, genus;
 	public int numTrna;
 	public ArrayList<Trna> trnaList;
+	ArrayList<JCheckBox> jcb = new ArrayList<JCheckBox>();
+	ArrayList<String> jcVal = new ArrayList<String>();
 	public Species next;
+	JFrame jf;
+	Parser p;
+	JTextField name1,known1,domain1,kingdom1,phylum1,clss1,ordr1,family1;
 	public static String[] acodonTable = new String[] { "AAA", "AAC", "AAG", "AAT", "ACA", "ACC", "ACG",
 											"ACT", "AGA", "AGC", "AGG", "AGT", "ATA", "ATC", "ATG", "ATT",
 											"CAA", "CAC", "CAG", "CAT", "CCA", "CCC", "CCG", "CCT", "CGA",
@@ -21,7 +33,10 @@ public class Species implements Serializable {
 	public int[] remarks1 = new int[acodonTable.length], remarks2 = new int[aacidTable.length];
 	public Float[] acodonTableFE = new Float[acodonTable.length], aacidTableFE = new Float[aacidTable.length];
 	private static final long serialVersionUID = 1L;
-
+	private static TrnaDatabase db = new TrnaDatabase();
+	private static TrnaDatabase db2 = new TrnaDatabase();
+	public String tempn,tempm,tempk,tempp,tempc,tempo,tempf,tempg;
+	FileChooser fc;
 	Species() {
 
 	}
@@ -79,7 +94,134 @@ public class Species implements Serializable {
 		this.trnaList = new ArrayList<Trna>();
 		this.next = null;
 	}
-
+	public void deleteSpeciesForm(String[] arr,TrnaDatabase dbin){
+	//public void deleteSpeciesForm(TrnaDatabase dbin){
+		jf = new JFrame("Delete Species");
+		db2 = new TrnaDatabase(dbin);
+		JPanel jp = new JPanel();
+		JButton jb = new JButton("Delete");
+		JCheckBox check;
+		int count;
+		for(count=0;count<arr.length;count++){
+			jcVal.add(arr[count]);
+			check = new JCheckBox(arr[count]);
+			jcb.add(check);
+			jp.add(check);
+		}
+		jp.add(jb);
+		jf.add(jp);
+		jb.addActionListener(new ActionListener()	
+		{
+		public void actionPerformed(ActionEvent e)
+		{	
+		//Species spc = dbin.getByName(String name,TrnaDatabase dbin)
+			int cnt = 0;
+			ArrayList<Species> spec = new ArrayList<Species>();
+			ArrayList<String> names = new ArrayList<String>();
+			Species toDel = new Species();
+			//Get Names of Nodes that were deleted
+			//Convert to Species
+			for(cnt = 0;cnt<jcb.size();cnt++){
+				if (jcb.get(cnt).isSelected()) {
+				   db2.delete(db2.getByName(jcVal.get(cnt)));
+                }
+			}
+			try{
+				db2.saveToFile("sample.dat");
+			}catch(Exception ex){}
+			jf.setVisible(false);
+		}
+		});
+		jf.setSize(600,600);
+		jf.setVisible(true);
+		
+	}
+	public void assignValues(){
+	try{
+		//edit dis
+		db.loadFromFile("sample.dat");
+	}catch(Exception e){}
+		Species spec = new Species();
+		spec.name = tempn;
+		spec.nickname = tempm;
+		spec.domain = tempk;
+		spec.kingdom = tempp;
+		spec.phylum = tempc;
+		spec.classs = tempo;
+		spec.order = tempf;
+		spec.family = tempg;
+		spec.genus = tempg;
+		spec.trnaList = new ArrayList<Trna>();
+		spec.next = null;
+		db.insert(spec);
+		try{
+		//Insert FileChooserHere
+		fc = new FileChooser();
+		String fname = fc.saveFileChooser();
+		//p = new Parser("sample.dat");
+		//	db = p.parseTrnaSorted();
+		db.saveToFile(fname);
+		} catch(Exception e){}
+	}
+	
+	public void userInputForm(){
+		Dimension d = new Dimension(150,150);
+		jf = new JFrame("Add New Species");
+		JPanel jp = new JPanel();
+		JButton jb = new JButton("Submit");
+		name1 = new JTextField("Name:");
+		name1.setSize(d);
+		known1 = new JTextField("Known As:");
+		known1.setSize(d);
+		domain1 = new JTextField("Domain:");
+		domain1.setSize(d);
+		kingdom1 = new JTextField("Kingdom:");
+		kingdom1.setSize(d);
+		phylum1 = new JTextField("Phylum:");
+		phylum1.setSize(d);
+		phylum1.add(new JLabel("Phylum:"));
+		clss1 = new JTextField("Class:");
+		clss1.setSize(d);
+		clss1.add(new JLabel("Class:"));
+		ordr1 = new JTextField("Order:");
+		ordr1.setSize(d);
+		family1 = new JTextField("Family:");
+		family1.setSize(d);
+		jp.add(new JLabel("Name:"));
+		jp.add(name1);
+		jp.add(new JLabel("Known As:"));
+		jp.add(known1);
+		jp.add(domain1);
+		jp.add(kingdom1);
+		jp.add(phylum1);
+		jp.add(clss1);
+		jp.add(ordr1);
+		jp.add(family1);
+		jp.add(jb);
+		jf.add(jp);
+		jf.setSize(450,450);
+		jf.setVisible(true);
+		jb.addActionListener(new ActionListener()	
+		{
+		public void actionPerformed(ActionEvent e)
+		{	
+			tempn = name1.getText().toString();
+			tempm = known1.getText().toString();
+			tempk = domain1.getText().toString();
+			tempp = kingdom1.getText().toString();
+			tempc = phylum1.getText().toString();
+			tempo = clss1.getText().toString();
+			tempf = ordr1.getText().toString();
+			tempg = family1.getText().toString();
+			jf.setVisible(false);
+			assignValues();
+			
+		}
+		});
+		
+		//return this;
+		
+	}
 	public void addTrna(Trna t) {
 		trnaList.add(t);
 	}

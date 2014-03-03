@@ -7,6 +7,7 @@ import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
+import javax.swing.*;
 import javax.swing.ButtonGroup;
 import javax.swing.JFrame;
 import javax.swing.JMenu;
@@ -30,18 +31,19 @@ public class MainDemo extends JFrame implements ActionListener, ListSelectionLis
 	private JMenu menu;
 	private JMenuItem menuItem;
 	ButtonGroup group;
+	private FileChooser fc = new FileChooser();
 	JRadioButtonMenuItem allMode, acodonMode, aacidMode;
 	private JSplitPane splitPane;
 	private JTable table1, table2;
 	private JScrollPane scrollPane1, scrollPane2;
 	private JPanel panel;
 	private static TrnaDatabase db = new TrnaDatabase();
-
+	private Species s1;
 	private static final long serialVersionUID = 1L;
 
 	public MainDemo() throws Exception {
 		db.loadFromFile("sample.dat");
-
+		
 		// Create the menu bar.
 		menuBar = new JMenuBar();
 
@@ -107,6 +109,7 @@ public class MainDemo extends JFrame implements ActionListener, ListSelectionLis
 
 		this.setJMenuBar(menuBar);
 
+		
 		String[] columnNames = { "Name", "Known as", "Domain", "Kingdom", "Phylum", "Class", "Order", "Family", "Genus", "Number of tRNAs" };
 
 		Object[][] data = db.toArray();
@@ -122,6 +125,8 @@ public class MainDemo extends JFrame implements ActionListener, ListSelectionLis
 				return returnValue;
 			}
 		};
+		
+		//----------------------------------------------------------
 
 		table1 = new JTable(model) {
 			public boolean getScrollableTracksViewportWidth() {
@@ -191,7 +196,7 @@ public class MainDemo extends JFrame implements ActionListener, ListSelectionLis
 				column.setMinWidth(50);
 			}
 		}
-
+/*
 		scrollPane1 = new JScrollPane(table1);
 		scrollPane2 = new JScrollPane(table2);
 
@@ -204,7 +209,48 @@ public class MainDemo extends JFrame implements ActionListener, ListSelectionLis
 		Dimension minimumSize = new Dimension(100, 100);
 		scrollPane1.setMinimumSize(minimumSize);
 		scrollPane2.setMinimumSize(minimumSize);
+*/
+//-----------------------------------------------------------
+//TO ADD LISTENERS
+	JPanel view = new JPanel();
+		JPanel view2 = new JPanel();
+		JButton butt;
+		view.setLayout(new BorderLayout());
+		view2.setLayout(new BorderLayout());
+		//scrollPane1 = new JScrollPane(table1);
+		scrollPane1 = new JScrollPane(view);
+		view.add(new JScrollPane(table1),BorderLayout.NORTH);
+		butt = new JButton("Add Species");
+		view.add(butt,BorderLayout.CENTER);
+		butt.addActionListener(this);
+		butt = new JButton("Delete Species");
+		view.add(butt,BorderLayout.SOUTH);
+		butt.addActionListener(this);
+		
+		
+		scrollPane2 = new JScrollPane(view2);
+		view2.add(new JScrollPane(table2),BorderLayout.NORTH);
+		butt = new JButton("Add tRNA");
+		view2.add(butt,BorderLayout.CENTER);
+		//scrollPane2 = new JScrollPane(table2);
+		butt.addActionListener(this);
+		butt = new JButton("Delete tRNA");
+		view2.add(butt,BorderLayout.SOUTH);
+		butt.addActionListener(this);
+		// Create a split pane with the two scroll panes in it.
+		splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, view,
+				view2);
+		splitPane.setOneTouchExpandable(true);
+		splitPane.setDividerLocation(300);
 
+		// Provide minimum sizes for the two components in the split pane
+		Dimension minimumSize = new Dimension(100, 100);
+		
+		scrollPane1.setMinimumSize(minimumSize);
+		scrollPane1.add(new JButton("Add Species"),ScrollPaneLayout.LOWER_LEFT_CORNER);
+		scrollPane2.setMinimumSize(minimumSize);
+
+//-----------------------------------------------------------
 		panel = new JPanel();
 		panel.add(splitPane);
 		this.add(panel);
@@ -217,7 +263,7 @@ public class MainDemo extends JFrame implements ActionListener, ListSelectionLis
 
 	public void actionPerformed(ActionEvent x) {
 		System.out.println("Item clicked: " + x.getActionCommand());
-		// Species n = new Species();
+		 Species n = new Species();
 
 		if (x.getActionCommand() == "Test") {
 			// n = db.listIterator();
@@ -227,12 +273,36 @@ public class MainDemo extends JFrame implements ActionListener, ListSelectionLis
 			// n = db.listIterator();
 			// }
 		}
+		if(x.getActionCommand() == "Save"){
+			try{
+				String fname = fc.saveFileChooser();
+				db.saveToFile(fname);
+			}catch(Exception e){
+				e.printStackTrace();
+			}
+		}
 		if (x.getActionCommand() == "Save As...") {
-			// JFileChooser chooser = new JFileChooser();
-
+			
 		}
 		if (x.getActionCommand() == "Exit") {
+			//SaveToFile
 			System.exit(0);
+		}
+		if(x.getActionCommand() == "Add Species"){
+			n.userInputForm();
+		}
+		if(x.getActionCommand() == "Add tRNA"){
+			
+		}
+		if(x.getActionCommand() == "Delete Species"){
+			db.databaseToNameArray();	
+			//Show list of species, choose which one to delete
+			String[] arr;
+			arr = db.databaseToNameArray();
+			n.deleteSpeciesForm(arr,db);
+		}
+		if(x.getActionCommand() == "Delete tRNA"){
+			
 		}
 	}
 
@@ -372,7 +442,55 @@ public class MainDemo extends JFrame implements ActionListener, ListSelectionLis
 
 			table2.addMouseListener(this);
 			table2.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
-
+	//----------------------------------------------------------------------
+	JPanel view = new JPanel();
+			JPanel view2 = new JPanel();
+			JButton butt;
+			view.setLayout(new BorderLayout());
+			view2.setLayout(new BorderLayout());
+			//scrollPane1 = new JScrollPane(table1);
+			scrollPane1 = new JScrollPane(view);
+			view.add(new JScrollPane(table1),BorderLayout.NORTH);
+			butt = new JButton("Add Species");
+			view.add(butt,BorderLayout.CENTER);
+			butt.addActionListener(this);
+			butt = new JButton("Delete Species");
+			view.add(butt,BorderLayout.SOUTH);
+			butt.addActionListener(this);
+			
+			
+			scrollPane2 = new JScrollPane(view2);
+			view2.add(new JScrollPane(table2),BorderLayout.NORTH);
+			butt = new JButton("Add tRNA");
+			view2.add(butt,BorderLayout.CENTER);
+			//scrollPane2 = new JScrollPane(table2);
+			butt.addActionListener(this);
+			butt = new JButton("Delete tRNA");
+			view2.add(butt,BorderLayout.SOUTH);
+			butt.addActionListener(this);
+			
+			// Create a split pane with the two scroll panes in it.
+			splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, view,
+					view2);
+			splitPane.setOneTouchExpandable(true);
+		//	splitPane.setDividerLocation(300);
+			Dimension minimumSize = new Dimension(100, 100);
+		
+			scrollPane1.setMinimumSize(minimumSize);
+			scrollPane1.add(new JButton("Add Species"),ScrollPaneLayout.LOWER_LEFT_CORNER);
+			scrollPane2.setMinimumSize(minimumSize);
+			panel = new JPanel();
+			panel.add(splitPane);
+		//	 this.add(panel);
+			this.setLayout(new BorderLayout());
+			this.add(panel, BorderLayout.CENTER);
+//			this.setSize(500, 500);
+			this.revalidate();
+			this.repaint();
+	
+	
+	//----------------------------------------------------------------------
+	/*
 			panel = new JPanel();
 			scrollPane2 = new JScrollPane(table2);
 			int divider = splitPane.getDividerLocation();
@@ -384,6 +502,7 @@ public class MainDemo extends JFrame implements ActionListener, ListSelectionLis
 
 			this.revalidate();
 			this.repaint();
+	*/		
 		}
 
 		if (table2.equals(table)) {
